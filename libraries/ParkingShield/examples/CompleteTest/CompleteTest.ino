@@ -12,7 +12,7 @@ void setup()
     Serial.begin(9600);
     Scheduler::init();
     Scheduler::addTask(output, 1000);
-    shield.decimalPointOn();
+    shield.setDecimalPoint(true);
     playMelody();
 }
 
@@ -106,9 +106,9 @@ void playTone(int tone, int duration)
 {
   for (long i = 0; i < duration * 1000L; i += tone * 2)
   {
-    shield.setBuzzer(HIGH);
+    shield.setBuzzer(true);
     delayMicroseconds(tone);
-    shield.setBuzzer(LOW);
+    shield.setBuzzer(false);
     delayMicroseconds(tone);
   }
 }
