@@ -1,59 +1,65 @@
 #ifndef SEVENSEG_H
 	#define SEVENSEG_H
 
-#include <Arduino.h>
+#include <DeviceArduino.h>
+//#include <DeviceEmulator.h>
+#include <stdint.h>
 
-#define SEGMENT_LED_OFF HIGH
-#define SEGMENT_LED_ON LOW
 
 /**
  * @brief The SevenSeg class provides functionality to show the digits [0-9] and the decimal point on a single 7-segment display.
- * @author Lukas Fischer
  * @author Marc Vester (XaserLE)
+ * @author Lukas Fischer
  */
 class SevenSeg
 {
 	public:
 		/**
 		 * @brief Constructor
-		 * @brief The letters are ordered as follows: a = top, b = upper right, c = lower right, d = bottom, e = lower left, f = upper left, g = middle.
-		 * @param pin_a The arduino pin that is connected to segment a.
-		 * @param pin_b The arduino pin that is connected to segment b.
-		 * @param pin_c The arduino pin that is connected to segment c.
-		 * @param pin_d The arduino pin that is connected to segment d.
-		 * @param pin_e The arduino pin that is connected to segment e.
-		 * @param pin_f The arduino pin that is connected to segment f.
-		 * @param pin_g The arduino pin that is connected to segment g.
-		 * @param pin_dp The arduino pin that is connected to the segment with the decimal point.
+		 * @brief		 ---a---
+		 * @brief		|		|
+		 * @brief		|f		|b
+		 * @brief		|		|
+		 * @brief		 ---g---
+		 * @brief		|		|
+		 * @brief		|e		|c
+		 * @brief		|		|
+		 * @brief		 ---d---	dp
+		 * @param segmentPins An array with the device pins that are connected to the 7-seg display, starting with 'a' and ending with 'g'. See above for order. Length: [7-8], dependent on the decimal point.
+		 * @param anode Indicates whether the 7-seg display is common anode (true) or common cathode (false).
+		 * @param hasDecimalPoint Indicates whether the 7-seg display has a decimal point or not.
+		 * @param
 		 */
-		SevenSeg(int pin_a, int pin_b, int pin_c, int pin_d, int pin_e, int pin_f, int pin_g, int pin_dp);
-	
-		/**
-		 * @brief Destructor
-		 */
-		~SevenSeg() {}
+		SevenSeg(Device::pin_t segmentPins[], bool anode, bool hasDecimalPoint = false);
     
 		/**
 		 * @brief Shows a number on the display.
 		 * @param num The number to show. Valid values: [0-9]. If num is invalid, the display will show a "-".
 		 */
-		void setNumber(int num);
-	
+		void setNumber(uint8_t number) const;
+
 		/**
-		 * @brief Turns the decimal point on.
+		 * @brief Turns the decimal point on or off.
+		 * @param enable If true, decimal point is on. If false, decimal point is off.
 		 */
-		void decimalPointOn(void) { digitalWrite(pin_dp, SEGMENT_LED_ON); }
-		
+		void setDecimalPoint(bool enable) const;
+
 		/**
-		 * @brief Turns the decimal point off.
+		 * @brief Turns als segments off.
 		 */
-		void decimalPointOff(void) { digitalWrite(pin_dp, SEGMENT_LED_OFF); }
+		void clear(void) const;
   
 	private:
-		static const int NUM_SEGMENTS = 7;
-		int segmentPins[NUM_SEGMENTS] = {0};
-		static const int segmentsForNumbers[11][NUM_SEGMENTS];
-		int pin_dp;
+		/**
+		 * @brief Decides whether a given number is valid or not (valid means [0-9]).
+		 * @param number The number to verify.
+		 * @return True if valid, false otherwise.
+		 */
+		bool isNumberValid(uint8_t number) const;
+
+		Device::pin_t segmentMap[9];
+		Device::signal_t (* numberMap)[7];
+		bool _hasDecimalPoint;
 };
 
 #endif
