@@ -1,4 +1,4 @@
-#include <SevenSeg.h>
+#include "SevenSeg.h"
 
 bool symbolMap[SevenSeg::NUMBER_SYMBOLS][SevenSeg::NUMBER_SEGMENTS] = {
 		{ true, true, true, true, true, true, false },		// 0
