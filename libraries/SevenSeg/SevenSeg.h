@@ -67,9 +67,9 @@ class SevenSeg
 		 * @brief		|e		|c
 		 * @brief		|		|
 		 * @brief		 ---d---	dp
-		 * @param segmentPins An array with the device pins that are connected to the 7-seg display, starting with 'a' and ending with 'g'. See above for order. Length: [7-8], dependent on the decimal point.
+		 * @param segmentPins An array with the device pins that are connected to the display, starting with 'a' and ending with 'g'. See above for order. Length: [7-8], dependent on the decimal point.
+		 * @param hasDecimalPoint Indicates whether we have a decimal point on the display or not.
 		 * @param connector Specifies the connector type of the display.
-		 * @param
 		 */
 		SevenSeg(Device::pin_t segmentPins[], bool hasDecimalPoint = true, connector_t connector = CONNECTOR_COMMONANODE);
     
