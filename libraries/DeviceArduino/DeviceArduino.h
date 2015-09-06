@@ -1,5 +1,5 @@
 #ifndef DEVICE_H
-#define DEVICE_H
+  #define DEVICE_H
 
 #include <Arduino.h>
 #include <stdint.h>
@@ -53,6 +53,7 @@ class Device
 	    static signal_t digitalReadPin(pin_t pin);
 	    static void digitalWritePin(pin_t pin, signal_t signal);
     	
+    private:
     	static bool isPinValid(pin_t pin);
     	static bool isPinmodeValid(pinmode_t pinmode);
     	static bool isSignalValid(signal_t signal);

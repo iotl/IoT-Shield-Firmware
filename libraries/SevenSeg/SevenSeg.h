@@ -1,8 +1,8 @@
 #ifndef SEVENSEG_H
-#define SEVENSEG_H
+	#define SEVENSEG_H
 
 #include <DeviceArduino.h>
-//#include "DeviceEmulator.h>
+//#include <DeviceEmulator.h>
 #include <stdint.h>
 
 
@@ -59,14 +59,14 @@ class SevenSeg
 		/**
 		 * @brief Constructor
 		 * @brief		 ---a---
-		 * @brief		|	|
-		 * @brief		|f	|b
-		 * @brief		|	|
+		 * @brief		|		|
+		 * @brief		|f		|b
+		 * @brief		|		|
 		 * @brief		 ---g---
-		 * @brief		|	|
-		 * @brief		|e	|c
-		 * @brief		|	|
-		 * @brief		 ---d---dp
+		 * @brief		|		|
+		 * @brief		|e		|c
+		 * @brief		|		|
+		 * @brief		 ---d---	dp
 		 * @param segmentPins An array with the device pins that are connected to the 7-seg display, starting with 'a' and ending with 'g'. See above for order. Length: [7-8], dependent on the decimal point.
 		 * @param connector Specifies the connector type of the display.
 		 * @param

@@ -1,7 +1,8 @@
-#include <DeviceArduino.h>
 #include <ParkingShield.h>
 #include <SevenSeg.h>
+#include <DeviceArduino.h>
 #include <Scheduler.h>
+
 
 ParkingShield shield;
 unsigned char counter = 0;
@@ -12,7 +13,7 @@ void setup()
     Scheduler::init();
     Scheduler::addTask(output, 1000);
     shield.sevenSeg().showDecimalPoint();
-    //playMelody();
+    playMelody();
 }
 
 void loop()
