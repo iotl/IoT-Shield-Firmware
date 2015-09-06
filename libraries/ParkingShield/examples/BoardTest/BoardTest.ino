@@ -1,3 +1,4 @@
+#include <DeviceArduino.h>
 #include <ParkingShield.h>
 #include <SevenSeg.h>
 #include <Scheduler.h>
