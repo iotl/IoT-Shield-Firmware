@@ -1,7 +1,7 @@
 ﻿#ifndef PARKINGSHIELD_H
 #define PARKINGSHIELD_H
 
-#include "utility/SevenSeg.h"
+#include <SevenSeg.h>
 
 /**
  * @brief The ParkingShield class is designed for the ParkingShield platform, an arduino extension board from J�rn Hoffmann at the University of Leipzig.
@@ -12,24 +12,24 @@
 class ParkingShield
 {
 	public:
-	    typedef enum {
-	      GREEN_LED,
-	      YELLOW_LED,
-	      RED_LED,
-	      LED_MAX
-	    } led_t;
-	    
+		typedef enum {
+			GREEN_LED,
+			YELLOW_LED,
+			RED_LED,
+			LED_MAX
+		} led_t;
+	
 		/**
 		 * @brief Constructor
 		 */
 		ParkingShield(void);
 
-	    /**
-	     * @brief Enables or disables an LED.
-	     * @param led The led to set on or off.
-	     * @param enable "True" enables and "false" disables the given led.
-	     */
-	    static void setLed(led_t led, bool enable);
+		/**
+		* @brief Enables or disables an LED.
+		* @param led The led to set on or off.
+		* @param enable "True" enables and "false" disables the given led.
+		*/
+		static void setLed(led_t led, bool enable);
  
 		/**
 		 * @brief Returns the actual measured temperature.

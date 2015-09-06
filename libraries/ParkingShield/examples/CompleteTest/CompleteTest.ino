@@ -1,8 +1,6 @@
 #include <ParkingShield.h>
 #include <SevenSeg.h>
-#include <DeviceArduino.h>
 #include <Scheduler.h>
-
 
 ParkingShield shield;
 unsigned char counter = 0;
