@@ -71,7 +71,7 @@ class SevenSeg
 		 * @param hasDecimalPoint Indicates whether we have a decimal point on the display or not.
 		 * @param connector Specifies the connector type of the display.
 		 */
-		SevenSeg(Device::pin_t segmentPins[], bool hasDecimalPoint = true, connector_t connector = CONNECTOR_COMMONANODE);
+		SevenSeg(Device::pin_t const segmentPins[], bool hasDecimalPoint = true, connector_t connector = CONNECTOR_COMMONANODE);
     
 		/**
 		 * @brief Shows a number on the display.
@@ -109,7 +109,7 @@ class SevenSeg
 		 * @brief Saves all pins and sets them to output.
 		 * @param segmentPins The array that maps segments a-g to device pins.
 		 */
-		void setupPins(Device::pin_t segmentPins[]);
+		void setupPins(Device::pin_t const segmentPins[]);
 
 		/**
 		 * @brief Decides whether a given number is valid or not (valid means [0-9]).

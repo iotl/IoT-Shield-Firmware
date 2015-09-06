@@ -38,9 +38,9 @@ typedef enum
   OUTPUT_MAX
 } output_t;
 
-Device::pin_t output_pins[OUTPUT_MAX] = {Device::DIGITAL_PIN_4, Device::ANALOG_PIN_5, Device::ANALOG_PIN_4, Device::DIGITAL_PIN_5};
-Device::pin_t input_pins[INPUT_MAX] = {Device::ANALOG_PIN_0, Device::ANALOG_PIN_1, Device::ANALOG_PIN_2, Device::ANALOG_PIN_3};
-Device::pin_t sevensegment_pins[8] = {Device::DIGITAL_PIN_7,Device::DIGITAL_PIN_8,Device::DIGITAL_PIN_9,Device::DIGITAL_PIN_10,Device::DIGITAL_PIN_11,Device::DIGITAL_PIN_12,Device::DIGITAL_PIN_13,Device::DIGITAL_PIN_6};
+Device::pin_t const output_pins[OUTPUT_MAX] = {Device::DIGITAL_PIN_4, Device::ANALOG_PIN_5, Device::ANALOG_PIN_4, Device::DIGITAL_PIN_5};
+Device::pin_t const input_pins[INPUT_MAX] = {Device::ANALOG_PIN_0, Device::ANALOG_PIN_1, Device::ANALOG_PIN_2, Device::ANALOG_PIN_3};
+Device::pin_t const sevensegment_pins[8] = {Device::DIGITAL_PIN_7,Device::DIGITAL_PIN_8,Device::DIGITAL_PIN_9,Device::DIGITAL_PIN_10,Device::DIGITAL_PIN_11,Device::DIGITAL_PIN_12,Device::DIGITAL_PIN_13,Device::DIGITAL_PIN_6};
 
 bool isInputPinValid(input_t inputPin)
 {

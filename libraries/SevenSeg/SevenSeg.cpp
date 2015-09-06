@@ -1,6 +1,6 @@
 #include <SevenSeg.h>
 
-bool symbolMap[SevenSeg::NUMBER_SYMBOLS][SevenSeg::NUMBER_SEGMENTS] = {
+bool const symbolMap[SevenSeg::NUMBER_SYMBOLS][SevenSeg::NUMBER_SEGMENTS] = {
 		{ true, true, true, true, true, true, false },		// 0
 	    { false, true, true, false, false, false, false },	// 1
 	    { true, true, false, true, true, false, true },		// 2
@@ -18,7 +18,7 @@ bool symbolMap[SevenSeg::NUMBER_SYMBOLS][SevenSeg::NUMBER_SEGMENTS] = {
 // Specification for common cathode. We will change this in constructor if we have common anode.
 Device::signal_t segmentstateMap[SevenSeg::NUMBER_SEGMENTSTATES] = { Device::SIGNAL_HIGH, Device::SIGNAL_LOW };
 
-SevenSeg::SevenSeg(Device::pin_t segmentPins[], bool hasDecimalPoint, connector_t connector) : _hasDecimalPoint(hasDecimalPoint)
+SevenSeg::SevenSeg(Device::pin_t const segmentPins[], bool hasDecimalPoint, connector_t connector) : _hasDecimalPoint(hasDecimalPoint)
 {
 	setupPins(segmentPins);
 
@@ -76,7 +76,7 @@ bool SevenSeg::isNumberValid(uint8_t number) const
 	return number <= 9;
 }
 
-void SevenSeg::setupPins(Device::pin_t segmentPins[])
+void SevenSeg::setupPins(Device::pin_t const segmentPins[])
 {
 	for (uint8_t i = 0; i < NUMBER_SEGMENTS; i++)
 	{
