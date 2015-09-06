@@ -12,8 +12,8 @@ void setup()
     Serial.begin(9600);
     Scheduler::init();
     Scheduler::addTask(output, 1000);
-    shield.setDecimalPoint(true);
-    playMelody();
+    shield.sevenSeg().showDecimalPoint();
+    //playMelody();
 }
 
 void loop()
@@ -61,7 +61,7 @@ void buttonS2Handler(void)
 
 void showNumber(unsigned char counter)
 {
-	shield.setNumber(counter);
+	shield.sevenSeg().showNumber(counter);
 	
 	if (counter < 8)
 	{

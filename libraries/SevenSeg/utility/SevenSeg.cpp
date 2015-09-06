@@ -1,77 +1,92 @@
 #include <SevenSeg.h>
 
-Device::signal_t numberMapAnode[12][7] = {
-		{ Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_LOW },	// 0
-	    { Device::SIGNAL_LOW, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW },		// 1
-	    { Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_LOW, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_LOW, Device::SIGNAL_HIGH },	// 2
-	    { Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_HIGH },	// 3
-	    { Device::SIGNAL_LOW, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH },		// 4
-	    { Device::SIGNAL_HIGH, Device::SIGNAL_LOW, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_LOW, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH },	// 5
-	    { Device::SIGNAL_HIGH, Device::SIGNAL_LOW, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH },	// 6
-	    { Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW },		// 7
-	    { Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH },	// 8
-	    { Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_LOW, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH },	// 9
-		{ Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_HIGH },		// -
-		{ Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW }			// nothing
+bool symbolMap[SevenSeg::NUMBER_SYMBOLS][SevenSeg::NUMBER_SEGMENTS] = {
+		{ true, true, true, true, true, true, false },		// 0
+	    { false, true, true, false, false, false, false },	// 1
+	    { true, true, false, true, true, false, true },		// 2
+	    { true, true, true, true, false, false, true },		// 3
+	    { false, true, true, false, false, true, true },	// 4
+	    { true, false, true, true, false, true, true },		// 5
+	    { true, false, true, true, true, true, true },		// 6
+	    { true, true, true, false, false, false, false },	// 7
+	    { true, true, true, true, true, true, true },		// 8
+	    { true, true, true, true, false, true, true },		// 9
+		{ false, false, false, false, false, false, true },	// -
+		{ false, false, false, false, false, false, false }	// nothing
 	};
 
-Device::signal_t numberMapCathode[12][7] = {
-		{ Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_HIGH },		// 0
-	    { Device::SIGNAL_HIGH, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH },	// 1
-	    { Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_HIGH, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_HIGH, Device::SIGNAL_LOW },		// 2
-	    { Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_LOW },	// 3
-	    { Device::SIGNAL_HIGH, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_LOW, Device::SIGNAL_LOW },		// 4
-	    { Device::SIGNAL_LOW, Device::SIGNAL_HIGH, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_HIGH, Device::SIGNAL_LOW, Device::SIGNAL_LOW },		// 5
-	    { Device::SIGNAL_LOW, Device::SIGNAL_HIGH, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW },		// 6
-	    { Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH },		// 7
-	    { Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW },			// 8
-	    { Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_LOW, Device::SIGNAL_HIGH, Device::SIGNAL_LOW, Device::SIGNAL_LOW },		// 9
-		{ Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_LOW },	// -
-		{ Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH }	// nothing
-	};
+// Specification for common cathode. We will change this in constructor if we have common anode.
+Device::signal_t segmentstateMap[SevenSeg::NUMBER_SEGMENTSTATES] = { Device::SIGNAL_HIGH, Device::SIGNAL_LOW };
 
-SevenSeg::SevenSeg(Device::pin_t segmentPins[], bool anode, bool hasDecimalPoint)
-	: numberMap(anode ? numberMapAnode : numberMapCathode), _hasDecimalPoint(hasDecimalPoint)
+SevenSeg::SevenSeg(Device::pin_t segmentPins[], bool hasDecimalPoint, connector_t connector) : _hasDecimalPoint(hasDecimalPoint)
 {
-	for (uint8_t i = 0; i < 7; i++)
-	{
-		segmentMap[i] = segmentPins[i];
-		Device::setPinMode(segmentMap[i], Device::PINMODE_OUTPUT);
-	}
-	if (_hasDecimalPoint)
-	{
-		segmentMap[7] = segmentPins[7];
-		Device::setPinMode(segmentMap[7], Device::PINMODE_OUTPUT);
-	}
+	setupPins(segmentPins);
 
-	numberMap = anode ? numberMapAnode : numberMapCathode;
+	switch (connector)
+	{
+		case CONNECTOR_COMMONANODE:		segmentstateMap[SEGMENTSTATE_ON] = Device::SIGNAL_LOW;
+										segmentstateMap[SEGMENTSTATE_OFF] = Device:: SIGNAL_HIGH;
+										break;
+		case CONNECTOR_COMMONCATHODE:	segmentstateMap[SEGMENTSTATE_ON] = Device::SIGNAL_HIGH;
+										segmentstateMap[SEGMENTSTATE_OFF] = Device:: SIGNAL_LOW;
+										break;
+		default:						segmentstateMap[SEGMENTSTATE_ON] = Device::SIGNAL_LOW;
+										segmentstateMap[SEGMENTSTATE_OFF] = Device:: SIGNAL_HIGH;
+										break;
+	}
 
 	clear();
 }
 
-void SevenSeg::setNumber(uint8_t number) const
+void SevenSeg::showNumber(uint8_t number) const
 {
-	uint8_t numberMapIndex = number;
-	if (!isNumberValid(number))
-		numberMapIndex = 10;
+	symbol_t symbol = SYMBOL_NOTHING;
 
-	for(int i = 0; i < 7; i++)
-		Device::digitalWritePin(segmentMap[i], numberMap[number][i]);
+	if (isNumberValid(number))
+		symbol = static_cast<symbol_t>(number);
+	else
+		symbol = SYMBOL_MINUS;
+
+	showSymbol(symbol);
 }
 
-void SevenSeg::setDecimalPoint(bool enable) const
+void SevenSeg::showSymbol(symbol_t symbol) const
 {
-	//if (enable && hasDecimalPoint)
-	//	Device::digitalWritePin(segmentMap[7+1], enable ? ON : OFF);
+	for(int i = 0; i < NUMBER_SEGMENTS; i++)
+		showSegment(static_cast<segment_t>(i), symbolMap[symbol][i]);
+}
+
+void SevenSeg::showSegment(segment_t segment, bool enable) const
+{
+	Device::digitalWritePin(segmentMap[segment], enable ? segmentstateMap[SEGMENTSTATE_ON] : segmentstateMap[SEGMENTSTATE_OFF]);
+}
+
+void SevenSeg::showDecimalPoint(bool enable) const
+{
+	Device::digitalWritePin(decimalPointPin, enable ? segmentstateMap[SEGMENTSTATE_ON] : segmentstateMap[SEGMENTSTATE_OFF]);
 }
 
 void SevenSeg::clear(void) const
 {
-	for(int i = 0; i < 7; i++)
-		Device::digitalWritePin(segmentMap[i], numberMap[11][i]);
+	showSymbol(SYMBOL_NOTHING);
 }
 
 bool SevenSeg::isNumberValid(uint8_t number) const
 {
-	return number < 10;
+	return number <= 9;
+}
+
+void SevenSeg::setupPins(Device::pin_t segmentPins[])
+{
+	for (uint8_t i = 0; i < NUMBER_SEGMENTS; i++)
+	{
+		segmentMap[i] = segmentPins[i];
+		Device::setPinMode(segmentMap[i], Device::PINMODE_OUTPUT);
+	}
+
+	if (_hasDecimalPoint)
+	{
+		decimalPointPin = segmentPins[NUMBER_SEGMENTS];
+		Device::setPinMode(decimalPointPin, Device::PINMODE_OUTPUT);
+	}
 }

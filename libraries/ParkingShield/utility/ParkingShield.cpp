@@ -117,7 +117,7 @@ void setAllLeds(bool enable)
 // ---------------------------------------------------------------------------------------------------- //
 // Public
 // ---------------------------------------------------------------------------------------------------- //
-ParkingShield::ParkingShield(void)  : sevSeg(sevensegment_pins, false, true)
+ParkingShield::ParkingShield(void)  : _sevenSeg(sevensegment_pins)
 {
   setupOutput();
   setupInput();
@@ -156,9 +156,4 @@ unsigned int ParkingShield::getBrightness(void) const
 void ParkingShield::setBuzzer(bool enable) const
 {
 	digitalWritePin(BUZZER, enable ? Device::SIGNAL_HIGH : Device::SIGNAL_LOW);
-}
-
-void ParkingShield::setDecimalPoint(bool enable) const
-{
-  sevSeg.setDecimalPoint(enable);
 }

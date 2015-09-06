@@ -65,16 +65,10 @@ class ParkingShield
 		 * @brief Show a number on the 7-segment display.
 		 * @param number The number to be shown. Valid values: [0-9].
 		 */
-		void setNumber(uint8_t number) const { sevSeg.setNumber(number); }
-		
-		/**
-		 * @brief Turns the decimal point on or off.
-		 * @param enable If true, decimal point is on. If false, decimal point is off.
-		 */
-		void setDecimalPoint(bool enable) const;
+		SevenSeg const & sevenSeg(void) const { return _sevenSeg; }
   
 	private:
-		SevenSeg sevSeg;
+		SevenSeg _sevenSeg;
 };
 
 #endif
