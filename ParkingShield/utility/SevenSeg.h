@@ -1,8 +1,8 @@
 #ifndef SEVENSEG_H
-	#define SEVENSEG_H
+#define SEVENSEG_H
 
-#include <DeviceArduino.h>
-//#include <DeviceEmulator.h>
+#include "DeviceArduino.h"
+//#include "DeviceEmulator.h"
 #include <stdint.h>
 
 

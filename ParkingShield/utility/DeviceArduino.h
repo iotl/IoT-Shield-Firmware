@@ -1,5 +1,5 @@
 #ifndef DEVICE_H
-  #define DEVICE_H
+#define DEVICE_H
 
 #include <Arduino.h>
 #include <stdint.h>

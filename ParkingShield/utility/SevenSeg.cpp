@@ -1,4 +1,4 @@
-#include <SevenSeg.h>
+#include "SevenSeg.h"
 
 Device::signal_t numberMapAnode[12][7] = {
 		{ Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_HIGH, Device::SIGNAL_LOW },	// 0

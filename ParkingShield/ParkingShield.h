@@ -1,7 +1,7 @@
-#ifndef PARKINGSHIELD_H
-	#define PARKINGSHIELD_H
+﻿#ifndef PARKINGSHIELD_H
+#define PARKINGSHIELD_H
 
-#include <SevenSeg.h>
+#include "utility/SevenSeg.h"
 
 /**
  * @brief The ParkingShield class is designed for the ParkingShield platform, an arduino extension board from J�rn Hoffmann at the University of Leipzig.
