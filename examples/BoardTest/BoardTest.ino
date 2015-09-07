@@ -4,21 +4,25 @@
 ParkingShield shield;
 unsigned char counter = 0;
 
-void setup()
+void setup(void)
 {
     Serial.begin(9600);
     Scheduler::init();
     Scheduler::addTask(output, 1000);
-    shield.sevenSeg().showDecimalPoint();
-    playMelody();
+    shield.showDecimalPoint();
+    shield.showNumber(9);
+    shield.countDown();
+    shield.playMarch();
+    //shield.playMelody();
 }
 
-void loop()
+void loop(void)
 {
 	buttonS1Handler();
 	buttonS2Handler();
 	showNumber(counter);
   Scheduler::scheduleTasks();
+  shield.update();
 }
 
 void output(void)
@@ -58,7 +62,7 @@ void buttonS2Handler(void)
 
 void showNumber(unsigned char counter)
 {
-	shield.sevenSeg().showNumber(counter);
+	shield.showNumber(counter);
 	
 	if (counter < 8)
 	{
@@ -77,49 +81,5 @@ void showNumber(unsigned char counter)
 		else
 			shield.setLed(ParkingShield::RED_LED, false);
 	}
-}
-
-void playMelody(void)
-{
-  static int length = 15; // the number of notes
-  static char notes[] = "ccggaagffeeddc "; // a space represents a rest
-  static int beats[] = { 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 4 };
-  static int tempo = 300;
-  
-  for (int i = 0; i < length; i++)
-  {
-    if (notes[i] == ' ') {
-      delay(beats[i] * tempo); // rest
-    } else {
-      playNote(notes[i], beats[i] * tempo);
-    }
-
-    // pause between notes
-    delay(tempo / 2); 
-  }
-}
-
-void playTone(int tone, int duration)
-{
-  for (long i = 0; i < duration * 1000L; i += tone * 2)
-  {
-    shield.setBuzzer(true);
-    delayMicroseconds(tone);
-    shield.setBuzzer(false);
-    delayMicroseconds(tone);
-  }
-}
-
-void playNote(char note, int duration)
-{
-  char names[] = { 'c', 'd', 'e', 'f', 'g', 'a', 'b', 'C' };
-  int tones[] = { 1915, 1700, 1519, 1432, 1275, 1136, 1014, 956 };
-
-  // play the tone corresponding to the note name
-  for (int i = 0; i < 8; i++)
-  {
-    if (names[i] == note)
-      playTone(tones[i], duration);
-  }
 }
 

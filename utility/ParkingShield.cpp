@@ -24,8 +24,8 @@ typedef enum
 {
   BUTTON_S1,
   BUTTON_S2,
-  BRIGHTNESS,  
-  TEMPERATURE,  
+  BRIGHTNESS,
+  TEMPERATURE,
   INPUT_MAX
 } input_t;
 
@@ -117,11 +117,12 @@ void setAllLeds(bool enable)
 // ---------------------------------------------------------------------------------------------------- //
 // Public
 // ---------------------------------------------------------------------------------------------------- //
-ParkingShield::ParkingShield(void)  : _sevenSeg(sevensegment_pins)
+ParkingShield::ParkingShield(void)
+  : _sevenSeg(sevensegment_pins), _countDown(false)
 {
   setupOutput();
   setupInput();
-  
+
   setAllLeds(false);
 }
 
@@ -156,4 +157,223 @@ unsigned int ParkingShield::getBrightness(void) const
 void ParkingShield::setBuzzer(bool enable) const
 {
 	digitalWritePin(BUZZER, enable ? Device::SIGNAL_HIGH : Device::SIGNAL_LOW);
+}
+
+void ParkingShield::beep(int frequencyInHertz, long timeInMilliseconds) const
+{
+    int x;   
+    long delayAmount = (long)(1000000/frequencyInHertz);
+    long loopTime = (long)((timeInMilliseconds*1000)/(delayAmount*2));
+    for (x=0;x<loopTime;x++)   
+    {    
+        setBuzzer(true);
+        Device::delayMicros(delayAmount);
+        setBuzzer(false);
+        Device::delayMicros(delayAmount);
+    }    
+   
+    Device::delayMillis(20);
+}
+
+void ParkingShield::playTone(int tone, int duration) const
+{
+  for (long i = 0; i < duration * 1000L; i += tone * 2)
+  {
+    setBuzzer(true);
+    delayMicroseconds(tone);
+    setBuzzer(false);
+    delayMicroseconds(tone);
+  }
+}
+
+void ParkingShield::playNote(char note, int duration) const
+{
+  char names[] = { 'c', 'd', 'e', 'f', 'g', 'a', 'b', 'C' };
+  int tones[] = { 1915, 1700, 1519, 1432, 1275, 1136, 1014, 956 };
+
+  // play the tone corresponding to the note name
+  for (int i = 0; i < 8; i++)
+  {
+    if (names[i] == note)
+      playTone(tones[i], duration);
+  }
+}
+
+void ParkingShield::playMarch(bool shortVersion) const
+{
+    int const c = 261;
+    int const d = 294;
+    int const e = 329;
+    int const f = 349;
+    int const g = 391;
+    int const gS = 415;
+    int const a = 440;
+    int const aS = 455;
+    int const b = 466;
+    int const cH = 523;
+    int const cSH = 554;
+    int const dH = 587;
+    int const dSH = 622;
+    int const eH = 659;
+    int const fH = 698;
+    int const fSH = 740;
+    int const gH = 784;
+    int const gSH = 830;
+    int const aH = 880;
+    //frequencies for the tones we're going to use
+    //used http://home.mit.bme.hu/~bako/tonecalc/tonecalc.htm to get these
+
+    //for the sheet music see:
+    //http://www.musicnotes.com/sheetmusic/mtd.asp?ppn=MN0016254
+    //this is just a translation of said sheet music to frequencies / time in ms
+    //used 500 ms for a quart note
+    
+    beep(a, 500); 
+    beep(a, 500);     
+    beep(a, 500); 
+    beep(f, 350); 
+    beep(cH, 150);
+    
+    beep(a, 500);
+    beep(f, 350);
+    beep(cH, 150);
+    beep(a, 1000);
+    //first bit
+    
+    beep(eH, 500);
+    beep(eH, 500);
+    beep(eH, 500);    
+    beep(fH, 350); 
+    beep(cH, 150);
+    
+    beep(gS, 500);
+    beep(f, 350);
+    beep(cH, 150);
+    beep(a, 1000);
+
+    if (shortVersion)
+      return;
+
+    //second bit...
+    
+    beep(aH, 500);
+    beep(a, 350); 
+    beep(a, 150);
+    beep(aH, 500);
+    beep(gSH, 250); 
+    beep(gH, 250);
+    
+    beep(fSH, 125);
+    beep(fH, 125);    
+    beep(fSH, 250);
+    delay(250);
+    beep(aS, 250);    
+    beep(dSH, 500);  
+    beep(dH, 250);  
+    beep(cSH, 250);  
+    //start of the interesting bit
+    
+    beep(cH, 125);  
+    beep(b, 125);  
+    beep(cH, 250);      
+    delay(250);
+    beep(f, 125);  
+    beep(gS, 500);  
+    beep(f, 375);  
+    beep(a, 125); 
+    
+    beep(cH, 500); 
+    beep(a, 375);  
+    beep(cH, 125); 
+    beep(eH, 1000); 
+    //more interesting stuff (this doesn't quite get it right somehow)
+    
+    beep(aH, 500);
+    beep(a, 350); 
+    beep(a, 150);
+    beep(aH, 500);
+    beep(gSH, 250); 
+    beep(gH, 250);
+    
+    beep(fSH, 125);
+    beep(fH, 125);    
+    beep(fSH, 250);
+    delay(250);
+    beep(aS, 250);    
+    beep(dSH, 500);  
+    beep(dH, 250);  
+    beep(cSH, 250);  
+    //repeat... repeat
+    
+    beep(cH, 125);  
+    beep(b, 125);  
+    beep(cH, 250);      
+    delay(250);
+    beep(f, 250);  
+    beep(gS, 500);  
+    beep(f, 375);  
+    beep(cH, 125); 
+           
+    beep(a, 500);            
+    beep(f, 375);            
+    beep(c, 125);            
+    beep(a, 1000);
+}
+
+void ParkingShield::playMelody(void) const
+{
+  static int length = 15; // the number of notes
+  static char notes[] = "ccggaagffeeddc "; // a space represents a rest
+  static int beats[] = { 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 4 };
+  static int tempo = 300;
+  
+  for (int i = 0; i < length; i++)
+  {
+    if (notes[i] == ' ') {
+      Device::delayMillis(beats[i] * tempo); // rest
+    } else {
+      playNote(notes[i], beats[i] * tempo);
+    }
+
+    // pause between notes
+    Device::delayMillis(tempo / 2); 
+  }
+}
+
+void ParkingShield::showNumber(uint8_t number)
+{
+  if (!_countDown && _sevenSeg.isNumberValid(number))
+  {
+    _number = number;
+    _sevenSeg.showNumber(number);
+  }
+}
+void ParkingShield::showDecimalPoint(bool enable)
+{
+  _sevenSeg.showDecimalPoint(enable);
+}
+
+void ParkingShield::countDown(void)
+{
+  _countDown = true;
+}
+
+void ParkingShield::update(void)
+{
+  static unsigned long int millisAtLastCall = 0;
+
+  if (_countDown)
+  {
+    if (Device::milliseconds() - millisAtLastCall >= 1000)
+    {
+      millisAtLastCall = Device::milliseconds();
+      if (_number > 0)
+      {
+        _number--;
+        _sevenSeg.showNumber(_number);
+      }
+      else
+        _countDown = false;
+    }
+  }
 }

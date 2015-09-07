@@ -3,6 +3,10 @@
 // -------------------------------------------------------------------------- //
 // Helper
 // -------------------------------------------------------------------------- //
+
+// Specification for common cathode. We will change this in constructor if we have common anode.
+Device::signal_t segmentstateMap[SevenSeg::NUMBER_SEGMENTSTATES] = { Device::SIGNAL_HIGH, Device::SIGNAL_LOW };
+
 static bool const symbolMap[SevenSeg::NUMBER_SYMBOLS][SevenSeg::NUMBER_SEGMENTS] = {
 	{ true, true, true, true, true, true, false },		// 0
 	{ false, true, true, false, false, false, false },	// 1
@@ -36,17 +40,8 @@ void SevenSeg::setupPins(Device::pin_t const segmentPins[])
 	}
 }
 
-// -------------------------------------------------------------------------- //
-// Public
-// -------------------------------------------------------------------------- //
-
-// Specification for common cathode. We will change this in constructor if we have common anode.
-Device::signal_t segmentstateMap[SevenSeg::NUMBER_SEGMENTSTATES] = { Device::SIGNAL_HIGH, Device::SIGNAL_LOW };
-
-SevenSeg::SevenSeg(Device::pin_t const segmentPins[], bool hasDecimalPoint, connector_t connector) : _hasDecimalPoint(hasDecimalPoint)
+void SevenSeg::setupSignals(connector_t connector) const
 {
-	setupPins(segmentPins);
-
 	switch (connector)
 	{
 		case CONNECTOR_COMMONANODE:
@@ -64,6 +59,17 @@ SevenSeg::SevenSeg(Device::pin_t const segmentPins[], bool hasDecimalPoint, conn
 			segmentstateMap[SEGMENTSTATE_OFF] = Device:: SIGNAL_HIGH;
 			break;
 	}
+}
+
+// -------------------------------------------------------------------------- //
+// Public
+// -------------------------------------------------------------------------- //
+
+SevenSeg::SevenSeg(Device::pin_t const segmentPins[], bool hasDecimalPoint, connector_t connector)
+	:	_hasDecimalPoint(hasDecimalPoint)
+{
+	setupPins(segmentPins);
+	setupSignals(connector);
 
 	clear();
 }

@@ -2,6 +2,7 @@
 	#define PARKINGSHIELD_H
 
 #include <SevenSeg.h>
+#include <stdint.h>
 
 /**
  * @brief The ParkingShield class is designed for the ParkingShield platform, an arduino extension board from J�rn Hoffmann at the University of Leipzig.
@@ -60,15 +61,56 @@ class ParkingShield
 		 * @param enable If true, buzzer makes noise. If false, buzzer is off.
 		 */
 		void setBuzzer(bool enable) const;
-    
+
 		/**
-		 * @brief Show a number on the 7-segment display.
-		 * @param number The number to be shown. Valid values: [0-9].
+		 * @brief Let's the buzzer make sound.
+		 * @param frequenzyInHertz The frequenz in hertz.
+		 * @param timeInMilliseconds The duration of the sound in milliseconds.
 		 */
-		SevenSeg const & sevenSeg(void) const { return _sevenSeg; }
+		void beep(int frequencyInHertz, long timeInMilliseconds) const;
+
+		/**
+		 * @brief Play's a tone.
+		 * @param tone The tone to play.
+		 * @param duration The duration in microseconds.
+		 */
+		void playTone(int tone, int duration) const;
+
+		/**
+		 * @brief Play's a note.
+		 * @param note The note to play.
+		 * @param duration The duration in microseconds.
+		 */
+		void playNote(char note, int duration) const;
+
+		/**
+		 *@brief Play's a popular melody :-D
+		 */
+		void playMelody(void) const;
+
+		/**
+		 * @brief Play's the storm trooper march :-D
+		 * @brief Much thanks to tagliati (https://gist.github.com/tagliati/1804108).
+		 */
+		void playMarch(bool shortVersion = true) const;
+
+		void showNumber(uint8_t number);
+		void showDecimalPoint(bool enable = true);
+
+		/**
+		 * @brief Asynchronous decrements the number on the seven segment display by 1 every second.
+		 */
+		void countDown(void);
+
+		/**
+		 * @brief Updates a few internal things, should be called every frame to make the sevenSegmentCountDown() work.
+		 */
+		void update(void);
   
 	private:
 		SevenSeg _sevenSeg;
+		bool _countDown;
+		uint8_t _number;
 };
 
 #endif
