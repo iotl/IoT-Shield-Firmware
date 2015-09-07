@@ -33,10 +33,12 @@ void loop()
   char getRequest[100];
   req.get(getRequest);
 
+  Serial.printf("Request : %s", getRequest);
+
   // Send get request string
   esp.connect(1, F("api.thingspeak.com"), 80);
   esp.send(1, getRequest, strlen(getRequest));
-
+  
   // Thingspeak requires 15 s delay between requests 
   delay (16000);
 }

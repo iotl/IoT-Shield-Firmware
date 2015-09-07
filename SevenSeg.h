@@ -1,5 +1,5 @@
 #ifndef SEVENSEG_H
-	#define SEVENSEG_H
+#define SEVENSEG_H
 
 #include <DeviceArduino.h>
 //#include <DeviceEmulator.h>
@@ -59,20 +59,20 @@ class SevenSeg
 		/**
 		 * @brief Constructor
 		 * @brief		 ---a---
-		 * @brief		|		|
-		 * @brief		|f		|b
-		 * @brief		|		|
+		 * @brief		|				|
+		 * @brief		|f			|b
+		 * @brief		|				|
 		 * @brief		 ---g---
-		 * @brief		|		|
-		 * @brief		|e		|c
-		 * @brief		|		|
-		 * @brief		 ---d---	dp
+		 * @brief		|				|
+		 * @brief		|e			|c
+		 * @brief		|				|
+		 * @brief		 ---d---(dp)
 		 * @param segmentPins An array with the device pins that are connected to the display, starting with 'a' and ending with 'g'. See above for order. Length: [7-8], dependent on the decimal point.
 		 * @param hasDecimalPoint Indicates whether we have a decimal point on the display or not.
 		 * @param connector Specifies the connector type of the display.
 		 */
 		SevenSeg(Device::pin_t const segmentPins[], bool hasDecimalPoint = true, connector_t connector = CONNECTOR_COMMONANODE);
-    
+
 		/**
 		 * @brief Shows a number on the display.
 		 * @param num The number to show. Valid values: [0-9]. If num is invalid, the display will show a "-".
@@ -103,7 +103,7 @@ class SevenSeg
 		 * @brief Turns als segments off.
 		 */
 		void clear(void) const;
-  
+
 	private:
 		/**
 		 * @brief Saves all pins and sets them to output.
