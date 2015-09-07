@@ -104,6 +104,13 @@ class SevenSeg
 		 */
 		void clear(void) const;
 
+		/**
+		 * @brief Decides whether a given number is valid or not (valid means [0-9]).
+		 * @param number The number to verify.
+		 * @return True if valid, false otherwise.
+		 */
+		bool isNumberValid(uint8_t number) const;
+
 	private:
 		/**
 		 * @brief Saves all pins and sets them to output.
@@ -112,11 +119,10 @@ class SevenSeg
 		void setupPins(Device::pin_t const segmentPins[]);
 
 		/**
-		 * @brief Decides whether a given number is valid or not (valid means [0-9]).
-		 * @param number The number to verify.
-		 * @return True if valid, false otherwise.
+		 * @brief Sets up the signals.
+		 * @param connector Connector type of the display.
 		 */
-		bool isNumberValid(uint8_t number) const;
+		void setupSignals(connector_t connector) const;
 
 		// Holds the mapping from segments to device pins.
 		Device::pin_t segmentMap[NUMBER_SEGMENTS];

@@ -1,5 +1,5 @@
 #include <Scheduler.h>
-#include <Arduino.h>
+#include <DeviceArduino.h>
 
 Scheduler::Task Scheduler::tasks[MAX_TASKS];
 
@@ -16,7 +16,7 @@ bool Scheduler::addTask(void (*func)(void), unsigned long int timer, bool reshot
     {
 		if (tasks[i].func == NULL)
 		{
-      		setTask(i, func, timer, millis(), reshot);
+      		setTask(i, func, timer, Device::milliseconds(), reshot);
 			return true;
 		}
     }
@@ -53,16 +53,16 @@ void Scheduler::scheduleTasks(void)
 		// If we have a task in this slot ...
 		if (tasks[i].func != NULL)
 		{
-			if (millis() - tasks[i].timestamp >= tasks[i].timer)
+			if (Device::milliseconds() - tasks[i].timestamp >= tasks[i].timer)
 			{
 				// Execute it.
 				tasks[i].func();
 				// If this is a periodically task, reset its timer.
 				if (tasks[i].reshot)
-          			tasks[i].timestamp = millis();
+          			tasks[i].timestamp = Device::milliseconds();
 				// Else delete the task.
 				else
-				  removeTask(i);
+				  	removeTask(i);
 			}
 		}
 	}

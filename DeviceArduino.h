@@ -52,6 +52,9 @@ class Device
 	    static void analogWritePin(pin_t pin, uint8_t value);
 	    static signal_t digitalReadPin(pin_t pin);
 	    static void digitalWritePin(pin_t pin, signal_t signal);
+	    static unsigned long int milliseconds(void) { return millis(); }
+	    static void delayMillis(unsigned long int milliseconds) { delay(milliseconds); }
+	    static void delayMicros(unsigned int microseconds) { delayMicroseconds(microseconds); }
     	
     private:
     	static bool isPinValid(pin_t pin);
