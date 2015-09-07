@@ -5,7 +5,7 @@
 #include <ParkingShield.h>
 
 // CHANGE CHANNEL'S API KEY HERE:
-static const char api_key[] = "QWERTZASDFYXCV";
+static const char api_key[] = "SSZQ72F4VTZW43YS";
 
 SoftwareSerial espSerial(2,3);
 Esp8266<SoftwareSerial> esp(espSerial);
@@ -16,6 +16,7 @@ void setup()
   Serial.begin(9600);
  
   esp.configureBaud();
+  esp.setBaud(9600);
   esp.joinAccessPoint("ti_iot","ti_iot42!");
   esp.setMultipleConnections(1);
 }
@@ -23,6 +24,7 @@ void setup()
 void loop()
 {
   String temperature(shield.getTemperature());
+  String host(F("api.thingspeak.com"));
   
   // Build GET request
   HttpRequest req(F("/update"));
@@ -30,14 +32,18 @@ void loop()
   req.addParameter(F("field1"), temperature);
 
   // Build GET request string
-  char getRequest[100];
-  req.get(getRequest);
+  char reqStr[100];
+  req.get(reqStr);
 
-  Serial.printf("Request : %s", getRequest);
+  Serial.print("Send request: ");
+  Serial.println(reqStr);
 
   // Send get request string
-  esp.connect(1, F("api.thingspeak.com"), 80);
-  esp.send(1, getRequest, strlen(getRequest));
+  esp.connect(1, host, 80);
+  esp.send(1, reqStr, strlen(reqStr));
+
+  Serial.print("Answer: ");
+  Serial.println(espSerial.readString());
   
   // Thingspeak requires 15 s delay between requests 
   delay (16000);
