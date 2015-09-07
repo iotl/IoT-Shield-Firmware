@@ -3,8 +3,6 @@
 #include <HttpRequest.h>
 
 #include <ParkingShield.h>
-#include <DeviceArduino.h>
-#include <SevenSeg.h>
 
 // CHANGE CHANNEL'S API KEY HERE:
 static const char api_key[] = "QWERTZASDFYXCV";

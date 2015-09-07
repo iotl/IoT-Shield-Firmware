@@ -1,12 +1,9 @@
-#include <DeviceArduino.h>
 #include <ParkingShield.h>
-#include <SevenSeg.h>
 
 ParkingShield shield;
 
 void setup() 
 {
-  // put your setup code here, to run once:
   Serial.begin(9600);
 }
 
@@ -19,9 +16,3 @@ void loop()
 
   delay(1000);  
 }
-
-void buttonS1Handler(bool enableLed)
-{
-  
-}
-
