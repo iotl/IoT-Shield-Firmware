@@ -92,7 +92,7 @@ _Commands:_
 
 	Command	| Description
 	:---------| :-------
-			| Returns the current temperature.
+			| Returns the current temperature in °C.
 	report		| Reports the current temperature in °C to the webservie.
 	monitor		| Continously reports the temperature every 15 seconds.
 	
@@ -114,8 +114,8 @@ _Commands:_
 
 	Command	| Description
 	:---------| :-------
-			| Returns the current light between 0..1024.
-	report		| Reports the current light to the webservice.
+			| Returns the current ambient light within range [0..1024].
+	report		| Reports the current ambient light within range [0..1024] to the webservice.
 	monitor		| Continously reports every 15 seconds.
 
 _Examples:_
