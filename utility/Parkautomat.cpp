@@ -40,70 +40,90 @@ void Parkautomat::ledsOff()
     shield.setLed(ParkingShield::RED_LED, false);
 }
 
+void Parkautomat::enterStateOff()
+{
+    state = OFF;
+    ledsOff();
+}
+
 void Parkautomat::updateStateOff()
 {
-    ledsOff();
     if( shieldIsOccupied() )
     {
-        state = Parkautomat::UNPAYED;
+        enterStateUnpayed();
     }
+}
+
+void Parkautomat::enterStateUnpayed()
+{
+    state = UNPAYED;
+    ledsOff();
+    shield.setLed(ParkingShield::RED_LED, true);
 }
 
 void Parkautomat::updateStateUnpayed()
 {
-    ledsOff();
-    shield.setLed(ParkingShield::RED_LED, true);
     if( shield.buttonS1Pressed() )
     {
-        state = Parkautomat::PAYED;
+        enterStatePayed();
         shield.sevenSeg++;
     }
     if( !shieldIsOccupied() )
     {
-        state = Parkautomat::OFF;
+        enterStateOff();
     }
+}
+
+void Parkautomat::enterStatePayed()
+{
+    state = PAYED;
+    ledsOff();
+    shield.setLed(ParkingShield::GREEN_LED, true);
 }
 
 void Parkautomat::updateStatePayed()
 {
-    ledsOff();
-    shield.setLed(ParkingShield::GREEN_LED, true);
     if( shield.buttonS1Pressed() )
     {
         shield.sevenSeg++;
     }
     if( TIMEOUT_WARNING_THRESHOLD == shield.sevenSeg.number() )
     {
-        state = Parkautomat::PAYED_TIMEOUT_WARNING;
+        enterStatePayedTimeoutWarning();
     }
     if( !shieldIsOccupied() )
     {
         shield.sevenSeg.showNumber(0);
-        state = Parkautomat::OFF;
+        enterStateOff();
     }
+}
+
+void Parkautomat::enterStatePayedTimeoutWarning()
+{
+    state = PAYED_TIMEOUT_WARNING;
+    ledsOff();
+    shield.setLed(ParkingShield::YELLOW_LED, true);
 }
 
 void Parkautomat::updateStatePayedTimeoutWarning()
 {
-    ledsOff();
-    shield.setLed(ParkingShield::YELLOW_LED, true);
     if( shield.buttonS1Pressed() )
     {
         shield.sevenSeg++;
     }
     if( TIMEOUT_WARNING_THRESHOLD < shield.sevenSeg.number() )
     {
-        state = Parkautomat::PAYED;
+        enterStatePayed();
     }
     if( counterIsTimedOut() )
     {
         shield.sevenSeg.showNumber(0);
-        state = Parkautomat::UNPAYED;
+        enterStateUnpayed();
     }
     if( !shieldIsOccupied() )
     {
         shield.sevenSeg.showNumber(0);
-        state = Parkautomat::OFF;
+        enterStateOff();
     }
 }
 

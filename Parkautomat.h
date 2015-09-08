@@ -12,6 +12,10 @@ private:
     void ledsOff();
     bool shieldIsOccupied();
     bool counterIsTimedOut();
+    void enterStateOff();
+    void enterStateUnpayed();
+    void enterStatePayed();
+    void enterStatePayedTimeoutWarning();
     void updateStateOff();
     void updateStateUnpayed();
     void updateStatePayed();
