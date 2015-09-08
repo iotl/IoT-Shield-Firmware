@@ -1,8 +1,10 @@
 #include <ParkingShield.h>
 #include <DeviceArduino.h>
-#include <Parkautomat.h>
+#include "Parkautomat.h"
 
 static const int TIMEOUT_WARNING_THRESHOLD = 1;
+
+bool getTaster();
 
 bool Parkautomat::counterIsTimedOut()
 {
@@ -63,7 +65,7 @@ void Parkautomat::enterStateUnpayed()
 
 void Parkautomat::updateStateUnpayed()
 {
-    if( shield.buttonS1Pressed() )
+    if( getTaster() )
     {
         enterStatePayed();
         shield.sevenSeg++;
@@ -83,7 +85,7 @@ void Parkautomat::enterStatePayed()
 
 void Parkautomat::updateStatePayed()
 {
-    if( shield.buttonS1Pressed() )
+    if( getTaster() )
     {
         shield.sevenSeg++;
     }
@@ -107,7 +109,7 @@ void Parkautomat::enterStatePayedTimeoutWarning()
 
 void Parkautomat::updateStatePayedTimeoutWarning()
 {
-    if( shield.buttonS1Pressed() )
+    if( getTaster() )
     {
         shield.sevenSeg++;
     }
