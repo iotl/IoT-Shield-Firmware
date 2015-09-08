@@ -1,31 +1,27 @@
 #include <ParkingShield.h>
 #include <Scheduler.h>
 
-ParkingShield shield;
+Scheduler scheduler;
+ParkingShield shield(scheduler);
 unsigned char counter = 0;
 
 void setup(void)
 {
     Serial.begin(9600);
-    Scheduler::init();
-    Scheduler::addTask(output, 1000);
-    shield.showDecimalPoint();
-    shield.showNumber(9);
-    shield.countDown();
+    scheduler.addTask(output, 1000);
     shield.playMarch();
-    //shield.playMelody();
+    shield.playMelody();
 }
 
 void loop(void)
 {
-	buttonS1Handler();
-	buttonS2Handler();
-	showNumber(counter);
-  Scheduler::scheduleTasks();
-  shield.update();
+  buttonS1Handler();
+  buttonS2Handler();
+  showNumber(counter);
+  scheduler.scheduleTasks();
 }
 
-void output(void)
+void output(void * nothing)
 {
     Serial.print("Button S1: ");
     Serial.println(shield.buttonS1Pressed());
@@ -39,47 +35,47 @@ void output(void)
 }
 
 void buttonS1Handler(void)
-{	
+{ 
     static unsigned long int millisForButtonLock = 0;
-	  static bool buttonS1Locked = false;
+    static bool buttonS1Locked = false;
     
     if (millisForButtonLock < millis())
-		buttonS1Locked = false;
+    buttonS1Locked = false;
     
     if (shield.buttonS1Pressed() && !buttonS1Locked)
     {
-		counter = ++counter % 10;
-	    millisForButtonLock = millis() + 250;
-	    buttonS1Locked = true;
+    counter = ++counter % 10;
+      millisForButtonLock = millis() + 250;
+      buttonS1Locked = true;
     }
 }
 
 void buttonS2Handler(void)
 {
-	if (shield.buttonS2Pressed())
-		counter = 0;
+  if (shield.buttonS2Pressed())
+    counter = 0;
 }
 
 void showNumber(unsigned char counter)
 {
-	shield.showNumber(counter);
-	
-	if (counter < 8)
-	{
-		if (0b001 & counter)
-			shield.setLed(ParkingShield::GREEN_LED, true);
-		else
-			shield.setLed(ParkingShield::GREEN_LED, false);
-	
-		if (0b010 & counter)
-			shield.setLed(ParkingShield::YELLOW_LED, true);
-		else
-			shield.setLed(ParkingShield::YELLOW_LED, false);
-	
-		if (0b100 & counter)
-			shield.setLed(ParkingShield::RED_LED, true);
-		else
-			shield.setLed(ParkingShield::RED_LED, false);
-	}
+  shield.sevenSeg.showNumber(counter);
+  
+  if (counter < 8)
+  {
+    if (0b001 & counter)
+      shield.setLed(ParkingShield::GREEN_LED, true);
+    else
+      shield.setLed(ParkingShield::GREEN_LED, false);
+  
+    if (0b010 & counter)
+      shield.setLed(ParkingShield::YELLOW_LED, true);
+    else
+      shield.setLed(ParkingShield::YELLOW_LED, false);
+  
+    if (0b100 & counter)
+      shield.setLed(ParkingShield::RED_LED, true);
+    else
+      shield.setLed(ParkingShield::RED_LED, false);
+  }
 }
 

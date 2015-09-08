@@ -2,6 +2,7 @@
 	#define PARKINGSHIELD_H
 
 #include <SevenSeg.h>
+#include <Scheduler.h>
 #include <stdint.h>
 
 /**
@@ -23,7 +24,7 @@ class ParkingShield
 		/**
 		 * @brief Constructor
 		 */
-		ParkingShield(void);
+		ParkingShield(Scheduler & scheduler);
 
 	    /**
 	     * @brief Enables or disables an LED.
@@ -97,13 +98,31 @@ class ParkingShield
 		/**
 		 * @brief Asynchronous decrements the number on the seven segment display by 1 every second.
 		 */
-		void countdown(void);
+		void countdownStart(void);
+
+		/**
+		 * @brief Stops the countdown started by countdownStart().
+		 */
+		void countdownStop(void);
+
+		/**
+		 * @brief Tells whether a countdown is active or not.
+		 * @return True if countdown is active, false otherwise.
+		 */
+		bool countdownActive(void) const;
+
+		/**
+		 * @brief Access to the scheduler.
+		 * @return The scheduler.
+		 */
+		Scheduler & scheduler(void);
 
 		/// The seven segment display, accessable from outside.
 		SevenSeg sevenSeg;
 
 	private:
-		bool _countDown;
+		bool _countdown;
+		Scheduler & _scheduler;
 };
 
 #endif

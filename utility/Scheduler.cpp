@@ -1,16 +1,13 @@
-#ifdef SCHEDULER_H
-
+#include <Scheduler.h>
 #include <DeviceArduino.h>
 
-template<unsigned char MAX_TASKS>
-Scheduler<MAX_TASKS>::Scheduler(void)
+Scheduler::Scheduler(void)
 {
 	for (unsigned char i = 0; i < MAX_TASKS; i++)
 		setTask(i, 0, 0, 0, 0, false);
 }
 
-template<unsigned char MAX_TASKS>
-bool Scheduler<MAX_TASKS>::addTask(void (*func)(void *), unsigned long int timer, void * data, bool reshot)
+bool Scheduler::addTask(void (*func)(void *), unsigned long int timer, void * data, bool reshot)
 {
 	// Search for a free slot to add the function.
 	for (unsigned char i = 0; i < MAX_TASKS; i++)
@@ -24,8 +21,7 @@ bool Scheduler<MAX_TASKS>::addTask(void (*func)(void *), unsigned long int timer
 	return false;
 }
 
-template<unsigned char MAX_TASKS>
-bool Scheduler<MAX_TASKS>::taskExists(void (*func)(void))
+bool Scheduler::taskExists(void (*func)(void *))
 {
         for (unsigned char i = 0; i < MAX_TASKS; i++)
         {
@@ -35,8 +31,7 @@ bool Scheduler<MAX_TASKS>::taskExists(void (*func)(void))
         return false;
 }
 
-template<unsigned char MAX_TASKS>
-void Scheduler<MAX_TASKS>::removeTask(void (*func)(void))
+void Scheduler::removeTask(void (*func)(void *))
 {
 	for (unsigned char i = 0; i < MAX_TASKS; i++)
     {
@@ -48,8 +43,7 @@ void Scheduler<MAX_TASKS>::removeTask(void (*func)(void))
     }
 }
 
-template<unsigned char MAX_TASKS>
-void Scheduler<MAX_TASKS>::scheduleTasks(void)
+void Scheduler::scheduleTasks(void)
 {
 	// Loop through all pending tasks.
 	for (unsigned char i = 0; i < MAX_TASKS; i++)
@@ -72,8 +66,7 @@ void Scheduler<MAX_TASKS>::scheduleTasks(void)
 	}
 }
 
-template<unsigned char MAX_TASKS>
-void Scheduler<MAX_TASKS>::setTask(unsigned char index, void (*func)(void *), unsigned long int timer, unsigned long int timestamp, void * data, bool reshot)
+void Scheduler::setTask(unsigned char index, void (*func)(void *), unsigned long int timer, unsigned long int timestamp, void * data, bool reshot)
 {
 	if (index >= 0 && index < MAX_TASKS)
 	{
@@ -85,10 +78,7 @@ void Scheduler<MAX_TASKS>::setTask(unsigned char index, void (*func)(void *), un
 	}
 }
 
-template<unsigned char MAX_TASKS>
-void Scheduler<MAX_TASKS>::removeTask(unsigned long int index)
+void Scheduler::removeTask(unsigned long int index)
 {
 	setTask(index, 0, 0, 0, 0, false);
 }
-
-#endif
