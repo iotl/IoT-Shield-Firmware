@@ -1,6 +1,6 @@
 #Commands
 
-The ParkingShield supports a simple ASCII-based command interface. Commands can control the output or trigger the read of an input
+The ParkingShield supports a simple ASCII-based command interface. A command controls the set of an output or the read of an input. 
 
 ##General Form
 The general form of the command resamples a REST-API and is defined as follow:
