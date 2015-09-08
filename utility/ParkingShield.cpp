@@ -2,7 +2,6 @@
 //#include <DeviceEmulator.h>
 #include <DeviceArduino.h>
 
-
 // ---------------------------------------------------------------------------------------------------- //
 // Helper 
 // ---------------------------------------------------------------------------------------------------- //
@@ -118,7 +117,7 @@ void setAllLeds(bool enable)
 // Public
 // ---------------------------------------------------------------------------------------------------- //
 ParkingShield::ParkingShield(void)
-  : _sevenSeg(sevensegment_pins), _countDown(false)
+  : sevenSeg(sevensegment_pins), _countDown(false)
 {
   setupOutput();
   setupInput();
@@ -180,9 +179,9 @@ void ParkingShield::playTone(int tone, int duration) const
   for (long i = 0; i < duration * 1000L; i += tone * 2)
   {
     setBuzzer(true);
-    delayMicroseconds(tone);
+    Device::delayMicros(tone);
     setBuzzer(false);
-    delayMicroseconds(tone);
+    Device::delayMicros(tone);
   }
 }
 
@@ -266,7 +265,7 @@ void ParkingShield::playMarch(bool shortVersion) const
     beep(fSH, 125);
     beep(fH, 125);    
     beep(fSH, 250);
-    delay(250);
+    Device::delayMillis(250);
     beep(aS, 250);    
     beep(dSH, 500);  
     beep(dH, 250);  
@@ -276,7 +275,7 @@ void ParkingShield::playMarch(bool shortVersion) const
     beep(cH, 125);  
     beep(b, 125);  
     beep(cH, 250);      
-    delay(250);
+    Device::delayMillis(250);
     beep(f, 125);  
     beep(gS, 500);  
     beep(f, 375);  
@@ -298,7 +297,7 @@ void ParkingShield::playMarch(bool shortVersion) const
     beep(fSH, 125);
     beep(fH, 125);    
     beep(fSH, 250);
-    delay(250);
+    Device::delayMillis(250);
     beep(aS, 250);    
     beep(dSH, 500);  
     beep(dH, 250);  
@@ -308,7 +307,7 @@ void ParkingShield::playMarch(bool shortVersion) const
     beep(cH, 125);  
     beep(b, 125);  
     beep(cH, 250);      
-    delay(250);
+    Device::delayMillis(250);
     beep(f, 250);  
     beep(gS, 500);  
     beep(f, 375);  
@@ -340,40 +339,22 @@ void ParkingShield::playMelody(void) const
   }
 }
 
-void ParkingShield::showNumber(uint8_t number)
-{
-  if (!_countDown && _sevenSeg.isNumberValid(number))
-  {
-    _number = number;
-    _sevenSeg.showNumber(number);
-  }
-}
-void ParkingShield::showDecimalPoint(bool enable)
-{
-  _sevenSeg.showDecimalPoint(enable);
-}
-
-void ParkingShield::countDown(void)
+void ParkingShield::countdown(void)
 {
   _countDown = true;
 }
 
-void ParkingShield::update(void)
+void updateCountdown(void)
 {
-  static unsigned long int millisAtLastCall = 0;
+  /*if (!_countDown) 
+    return;
 
-  if (_countDown)
-  {
-    if (Device::milliseconds() - millisAtLastCall >= 1000)
-    {
-      millisAtLastCall = Device::milliseconds();
-      if (_number > 0)
-      {
-        _number--;
-        _sevenSeg.showNumber(_number);
-      }
-      else
-        _countDown = false;
-    }
+  char number = sevenSeg.number();
+  if (number  < 1) {
+    _countDown = false;
+    return;
   }
+
+  number--;
+  sevenSeg.showNumber(number);*/
 }

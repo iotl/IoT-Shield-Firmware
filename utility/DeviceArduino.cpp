@@ -1,4 +1,5 @@
 #include <DeviceArduino.h>
+#include <Arduino.h>
 
 
 uint8_t const pinMap[Device::NUMBER_PINS] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, A0, A1, A2, A3, A4, A5 };
@@ -54,4 +55,19 @@ bool Device::isPinmodeValid(pinmode_t pinmode)
 bool Device::isSignalValid(signal_t signal)
 {
     return signal < NUMBER_SIGNALS;
+}
+
+unsigned long int Device::milliseconds(void)
+{
+    return millis();
+}
+
+void Device::delayMillis(unsigned long milliseconds)
+{
+    delay(milliseconds);
+}
+
+void Device::delayMicros(unsigned int microseconds)
+{
+    delayMicroseconds(microseconds);
 }

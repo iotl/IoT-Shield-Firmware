@@ -94,23 +94,16 @@ class ParkingShield
 		 */
 		void playMarch(bool shortVersion = true) const;
 
-		void showNumber(uint8_t number);
-		void showDecimalPoint(bool enable = true);
-
 		/**
 		 * @brief Asynchronous decrements the number on the seven segment display by 1 every second.
 		 */
-		void countDown(void);
+		void countdown(void);
 
-		/**
-		 * @brief Updates a few internal things, should be called every frame to make the sevenSegmentCountDown() work.
-		 */
-		void update(void);
-  
+		/// The seven segment display, accessable from outside.
+		SevenSeg sevenSeg;
+
 	private:
-		SevenSeg _sevenSeg;
 		bool _countDown;
-		uint8_t _number;
 };
 
 #endif

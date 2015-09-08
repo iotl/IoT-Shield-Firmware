@@ -1,29 +1,31 @@
-#include <Scheduler.h>
+#ifdef SCHEDULER_H
+
 #include <DeviceArduino.h>
 
-Scheduler::Task Scheduler::tasks[MAX_TASKS];
-
-void Scheduler::init(void)
+template<unsigned char MAX_TASKS>
+Scheduler<MAX_TASKS>::Scheduler(void)
 {
 	for (unsigned char i = 0; i < MAX_TASKS; i++)
-		setTask(i, NULL, 0, 0, false);
+		setTask(i, 0, 0, 0, 0, false);
 }
 
-bool Scheduler::addTask(void (*func)(void), unsigned long int timer, bool reshot)
+template<unsigned char MAX_TASKS>
+bool Scheduler<MAX_TASKS>::addTask(void (*func)(void *), unsigned long int timer, void * data, bool reshot)
 {
 	// Search for a free slot to add the function.
 	for (unsigned char i = 0; i < MAX_TASKS; i++)
     {
-		if (tasks[i].func == NULL)
+		if (tasks[i].func == 0)
 		{
-      		setTask(i, func, timer, Device::milliseconds(), reshot);
+      		setTask(i, func, timer, Device::milliseconds(), data, reshot);
 			return true;
 		}
     }
 	return false;
 }
 
-bool Scheduler::taskExists(void (*func)(void))
+template<unsigned char MAX_TASKS>
+bool Scheduler<MAX_TASKS>::taskExists(void (*func)(void))
 {
         for (unsigned char i = 0; i < MAX_TASKS; i++)
         {
@@ -33,7 +35,8 @@ bool Scheduler::taskExists(void (*func)(void))
         return false;
 }
 
-void Scheduler::removeTask(void (*func)(void))
+template<unsigned char MAX_TASKS>
+void Scheduler<MAX_TASKS>::removeTask(void (*func)(void))
 {
 	for (unsigned char i = 0; i < MAX_TASKS; i++)
     {
@@ -45,18 +48,19 @@ void Scheduler::removeTask(void (*func)(void))
     }
 }
 
-void Scheduler::scheduleTasks(void)
+template<unsigned char MAX_TASKS>
+void Scheduler<MAX_TASKS>::scheduleTasks(void)
 {
 	// Loop through all pending tasks.
 	for (unsigned char i = 0; i < MAX_TASKS; i++)
 	{
 		// If we have a task in this slot ...
-		if (tasks[i].func != NULL)
+		if (tasks[i].func != 0)
 		{
 			if (Device::milliseconds() - tasks[i].timestamp >= tasks[i].timer)
 			{
 				// Execute it.
-				tasks[i].func();
+				tasks[i].func(tasks[i].data);
 				// If this is a periodically task, reset its timer.
 				if (tasks[i].reshot)
           			tasks[i].timestamp = Device::milliseconds();
@@ -68,19 +72,23 @@ void Scheduler::scheduleTasks(void)
 	}
 }
 
-void Scheduler::setTask(unsigned char index, void (*func)(void), unsigned long int timer, unsigned long int timestamp, bool reshot)
+template<unsigned char MAX_TASKS>
+void Scheduler<MAX_TASKS>::setTask(unsigned char index, void (*func)(void *), unsigned long int timer, unsigned long int timestamp, void * data, bool reshot)
 {
 	if (index >= 0 && index < MAX_TASKS)
 	{
 		tasks[index].func = func;
 		tasks[index].timer = timer;
+		tasks[index].data = data;
 		tasks[index].timestamp = timestamp;
 		tasks[index].reshot = reshot;
 	}
 }
 
-void Scheduler::removeTask(unsigned long int index)
+template<unsigned char MAX_TASKS>
+void Scheduler<MAX_TASKS>::removeTask(unsigned long int index)
 {
-	setTask(index, NULL, 0, 0, false);
+	setTask(index, 0, 0, 0, 0, false);
 }
 
+#endif

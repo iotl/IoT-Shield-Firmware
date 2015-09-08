@@ -1,7 +1,6 @@
 #ifndef DEVICE_H
   #define DEVICE_H
 
-#include <Arduino.h>
 #include <stdint.h>
 
 class Device
@@ -52,9 +51,9 @@ class Device
 	    static void analogWritePin(pin_t pin, uint8_t value);
 	    static signal_t digitalReadPin(pin_t pin);
 	    static void digitalWritePin(pin_t pin, signal_t signal);
-	    static unsigned long int milliseconds(void) { return millis(); }
-	    static void delayMillis(unsigned long int milliseconds) { delay(milliseconds); }
-	    static void delayMicros(unsigned int microseconds) { delayMicroseconds(microseconds); }
+	    static unsigned long int milliseconds(void);
+    	static void delayMillis(unsigned long milliseconds);
+    	static void delayMicros(unsigned int microseconds);
     	
     private:
     	static bool isPinValid(pin_t pin);

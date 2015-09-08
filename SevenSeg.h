@@ -77,13 +77,13 @@ class SevenSeg
 		 * @brief Shows a number on the display.
 		 * @param num The number to show. Valid values: [0-9]. If num is invalid, the display will show a "-".
 		 */
-		void showNumber(uint8_t number) const;
+		void showNumber(uint8_t number);
 
 		/**
 		 * @brief Shows a symbol (see enum above) on the display (more low level access as showNumber()).
 		 * @param symbol The symbol to show.
 		 */
-		void showSymbol(symbol_t symbol) const;
+		void showSymbol(symbol_t symbol);
 
 		/**
 		 * @brief Shows/hides a segment (show enum above) on the display (more low level access as showNumber() and showSymbol()).
@@ -102,7 +102,7 @@ class SevenSeg
 		/**
 		 * @brief Turns als segments off.
 		 */
-		void clear(void) const;
+		void clear(void);
 
 		/**
 		 * @brief Decides whether a given number is valid or not (valid means [0-9]).
@@ -110,6 +110,33 @@ class SevenSeg
 		 * @return True if valid, false otherwise.
 		 */
 		bool isNumberValid(uint8_t number) const;
+
+		/**
+		 * @brief The currently shown symbol.
+		 * @return Returns the currently shown symbol.
+		 */
+		symbol_t symbol(void) const;
+
+
+		/**
+		 * @brief The currently shown decimal digit.
+		 * @return Returns the currently decimal digit. If no digit is shown -1 is returned.
+		 */
+		char number(void) const;
+
+		/**
+		 * @brief Postfix, increments the number on the seven segment display. If no number is shown, nothing will happen.
+		 * @param right The object to increment.
+		 * @return 
+		 */
+		SevenSeg & operator++(int);
+
+		/**
+		 * @brief Postfix, decrements the number on the seven segment display. If no number is shown, nothing will happen.
+		 * @param right The object to increment.
+		 * @return 
+		 */
+		SevenSeg & operator--(int);
 
 	private:
 		/**
@@ -129,6 +156,7 @@ class SevenSeg
 		// We put the pin for the decimal point in a separate variable.
 		bool _hasDecimalPoint;
 		Device::pin_t decimalPointPin;
+		symbol_t _symbol;
 };
 
 #endif

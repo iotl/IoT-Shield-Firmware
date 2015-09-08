@@ -26,6 +26,64 @@ void setup()
   esp.setMultipleConnections(1);
 }
 
+void executeCommand(const String &str)
+{
+  if (str == F("LED_1_ON"))
+    shield.setLed(ParkingShield::RED_LED, true);
+
+  else if (str == F("LED_1_OFF"))
+    shield.setLed(ParkingShield::RED_LED, false);
+
+  else if (str == F("LED_2_ON"))
+    shield.setLed(ParkingShield::YELLOW_LED, true);
+
+  else if (str == F("LED_2_OFF"))
+    shield.setLed(ParkingShield::YELLOW_LED, false);
+
+  else if (str == F("LED_3_ON"))
+    shield.setLed(ParkingShield::GREEN_LED, true);
+
+  else if (str == F("LED_3_OFF"))
+    shield.setLed(ParkingShield::GREEN_LED, false);
+  
+  else if (str == F("BUZZER_1_MARCH"))
+    shield.playMarch();
+
+  else if (str == F("7SEG_1_0"))
+    shield.showNumber(0);
+
+  else if (str == F("7SEG_1_1"))
+    shield.showNumber(1);
+
+  else if (str == F("7SEG_1_2"))
+    shield.showNumber(2);
+
+  else if (str == F("7SEG_1_3"))
+    shield.showNumber(3);
+
+  else if (str == F("7SEG_1_4"))
+    shield.showNumber(4);
+
+  else if (str == F("7SEG_1_5"))
+    shield.showNumber(5);
+
+  else if (str == F("7SEG_1_6"))
+    shield.showNumber(6);
+
+  else if (str == F("7SEG_1_7"))
+    shield.showNumber(7);
+
+  else if (str == F("7SEG_1_8"))
+    shield.showNumber(8);
+
+  else if (str == F("7SEG_1_9"))
+    shield.showNumber(9);
+
+  else if (str == F("7SEG_1_DOWN"))
+    shield.countDown();
+
+}
+
 void loop()
 {
   // Build the request path
@@ -60,62 +118,3 @@ void loop()
   // Thingspeak requires 15 s delay between requests
   delay (16000);
 }
-
-void executeCommand(const String &str)
-{
-  if (str == F("/led/1/on"))
-    shield.setLed(ParkingShield::RED_LED, true);
-
-  else if (str == F("/led/1/off"))
-    shield.setLed(ParkingShield::RED_LED, false);
-
-  else if (str == F("/led/2/on"))
-    shield.setLed(ParkingShield::YELLOW_LED, true);
-
-  else if (str == F("/led/2/off"))
-    shield.setLed(ParkingShield::YELLOW_LED, false);
-
-  else if (str == F("/led/3/on"))
-    shield.setLed(ParkingShield::GREEN_LED, true);
-
-  else if (str == F("/led/3/off"))
-    shield.setLed(ParkingShield::GREEN_LED, false);
-  
-  else if (str == F("/buzzer/1/march"))
-    shield.playMarch();
-
-  else if (str == F("/7seg/1/0"))
-    shield.showNumber(0);
-
-  else if (str == F("/7seg/1/1"))
-    shield.showNumber(1);
-
-  else if (str == F("/7seg/1/2"))
-    shield.showNumber(2);
-
-  else if (str == F("/7seg/1/3"))
-    shield.showNumber(3);
-
-  else if (str == F("/7seg/1/4"))
-    shield.showNumber(4);
-
-  else if (str == F("/7seg/1/5"))
-    shield.showNumber(5);
-
-  else if (str == F("/7seg/1/6"))
-    shield.showNumber(6);
-
-  else if (str == F("/7seg/1/7"))
-    shield.showNumber(7);
-
-  else if (str == F("/7seg/1/8"))
-    shield.showNumber(8);
-
-  else if (str == F("/7seg/1/9"))
-    shield.showNumber(9);
-
-  else if (str == F("/7seg/1/down"))
-    shield.countDown();
-}
-
-

@@ -7,7 +7,8 @@
 // Specification for common cathode. We will change this in constructor if we have common anode.
 Device::signal_t segmentstateMap[SevenSeg::NUMBER_SEGMENTSTATES] = { Device::SIGNAL_HIGH, Device::SIGNAL_LOW };
 
-static bool const symbolMap[SevenSeg::NUMBER_SYMBOLS][SevenSeg::NUMBER_SEGMENTS] = {
+static bool const symbolMap[SevenSeg::NUMBER_SYMBOLS][SevenSeg::NUMBER_SEGMENTS] = 
+{
 	{ true, true, true, true, true, true, false },		// 0
 	{ false, true, true, false, false, false, false },	// 1
 	{ true, true, false, true, true, false, true },		// 2
@@ -74,18 +75,18 @@ SevenSeg::SevenSeg(Device::pin_t const segmentPins[], bool hasDecimalPoint, conn
 	clear();
 }
 
-void SevenSeg::showNumber(uint8_t number) const
+void SevenSeg::showNumber(uint8_t number)
 {
-	symbol_t symbol = SYMBOL_MINUS;
+	if (!isNumberValid(number))
+		return;
 
-	if (isNumberValid(number))
-		symbol =  static_cast<symbol_t>(number);
-
+	symbol_t symbol =  static_cast<symbol_t>(number);
 	showSymbol(symbol);
 }
 
-void SevenSeg::showSymbol(symbol_t symbol) const
+void SevenSeg::showSymbol(symbol_t symbol)
 {
+	_symbol = symbol;
 	for(int i = 0; i < NUMBER_SEGMENTS; i++)
 		showSegment(static_cast<segment_t>(i), symbolMap[symbol][i]);
 }
@@ -100,12 +101,37 @@ void SevenSeg::showDecimalPoint(bool enable) const
 	Device::digitalWritePin(decimalPointPin, enable ? segmentstateMap[SEGMENTSTATE_ON] : segmentstateMap[SEGMENTSTATE_OFF]);
 }
 
-void SevenSeg::clear(void) const
+void SevenSeg::clear(void)
 {
 	showSymbol(SYMBOL_NOTHING);
+	showDecimalPoint(false);
 }
 
 bool SevenSeg::isNumberValid(uint8_t number) const
 {
-	return number <= 9;
+	return number <= SYMBOL_9;
+}
+
+SevenSeg::symbol_t SevenSeg::symbol(void) const
+{
+	return _symbol;
+}
+
+char SevenSeg::number(void) const
+{
+	return isNumberValid(_symbol) ? _symbol : -1;
+}
+
+SevenSeg & SevenSeg::operator++(int)
+{
+	if (isNumberValid(_symbol))
+		showNumber(number() + 1);
+	return *this;
+}
+
+SevenSeg & SevenSeg::operator--(int)
+{
+	if (isNumberValid(_symbol))
+		showNumber(number() - 1);
+	return *this;
 }
