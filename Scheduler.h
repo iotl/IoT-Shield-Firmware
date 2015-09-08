@@ -1,14 +1,13 @@
 #ifndef SCHEDULER_H
-#define SCHEDULER_H
-
+	#define SCHEDULER_H
 
 /**
  * @brief The Scheduler class provides basic scheduling capabilities. Simply add functions to it with a timer and it
  * @brief will call this function after timer is zero. It is also possible to periodically call a function.
  * @param MAX_TASKS Maximum number of tasks, cause we hardcode this for simplicity.
  * @author Marc Vester (XaserLE)
+ * @author Jörn Hoffmann (jhoffmann)
  */
-template<unsigned char MAX_TASKS>
 class Scheduler
 {
 	public:
@@ -32,13 +31,13 @@ class Scheduler
         *  @param fung Pointer to the function that identifies the task.
         *  @return True if task (func) is already in the scheduling list, false otherwise.
         */
-        bool taskExists(void (*func)(void));
+        bool taskExists(void (*func)(void *));
 		
 		/**
 		 * @brief Adds a task to the scheduler.
 		 * @param func Pointer to the function that is associated with the task.
 		 */
-		void removeTask(void (*func)(void));
+		void removeTask(void (*func)(void *));
 		
 		/**
 		 * @brief This is the main function to schedule all tasks. Should be called every frame in the main loop.
@@ -80,9 +79,10 @@ class Scheduler
 			bool reshot;
 		};
 		
+		// Maximum number of tasks.
+		static unsigned char const MAX_TASKS = 20;
 		// Array with the tasks to schedule.
 		Task tasks[MAX_TASKS];
 };
 
-#include <utility/Scheduler.cpp>
 #endif //SCHEDULER_H
