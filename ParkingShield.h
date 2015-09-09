@@ -32,19 +32,19 @@ class ParkingShield
          * @param enable "True" enables and "false" disables the given led.
          */
         static void setLed(led_t led, bool enable);
- 
+
         /**
          * @brief Returns the actual measured temperature.
          * @return Temperature as centigrade.
          */
         unsigned int getTemperature(void) const;
-    
+
         /**
          * @brief Returns the actual measured brightness.
          * @return Brightness.
          */
         unsigned int getBrightness(void) const;
-    
+
         /**
          * @brief Returns whether button S1 is pressed or not.
          * @return True if pressed, false otherwise.

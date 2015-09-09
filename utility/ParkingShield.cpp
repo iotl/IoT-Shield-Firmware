@@ -4,17 +4,17 @@
 #include <Scheduler.h>
 
 // ---------------------------------------------------------------------------------------------------- //
-// Helper 
+// Helper
 // ---------------------------------------------------------------------------------------------------- //
 /*
-typedef union{    
-  struct {
-    unsigned int red,
-    unsigned int yellow,
-    unsigned int green,
-  };
-  
-  unsigned int leds[LED_MAX]; 
+typedef union{
+    struct {
+        unsigned int red,
+        unsigned int yellow,
+        unsigned int green,
+    };
+
+    unsigned int leds[LED_MAX];
 } led_translation;
 
 static led_translation leds = {.red=a4, .yellow=a5, .green=4};
@@ -22,20 +22,20 @@ static led_translation leds = {.red=a4, .yellow=a5, .green=4};
 
 typedef enum
 {
-  BUTTON_S1,
-  BUTTON_S2,
-  BRIGHTNESS,
-  TEMPERATURE,
-  INPUT_MAX
+    BUTTON_S1,
+    BUTTON_S2,
+    BRIGHTNESS,
+    TEMPERATURE,
+    INPUT_MAX
 } input_t;
 
 typedef enum
 {
-  LED_GREEN = ParkingShield::GREEN_LED,
-  LED_YELLOW = ParkingShield::YELLOW_LED,
-  LED_RED = ParkingShield::RED_LED,
-  BUZZER,
-  OUTPUT_MAX
+    LED_GREEN = ParkingShield::GREEN_LED,
+    LED_YELLOW = ParkingShield::YELLOW_LED,
+    LED_RED = ParkingShield::RED_LED,
+    BUZZER,
+    OUTPUT_MAX
 } output_t;
 
 Device::pin_t const output_pins[OUTPUT_MAX] = {Device::DIGITAL_PIN_4, Device::ANALOG_PIN_5, Device::ANALOG_PIN_4, Device::DIGITAL_PIN_5};
@@ -44,74 +44,74 @@ Device::pin_t const sevensegment_pins[8] = {Device::DIGITAL_PIN_7,Device::DIGITA
 
 bool isInputPinValid(input_t inputPin)
 {
-  return inputPin < INPUT_MAX;
+    return inputPin < INPUT_MAX;
 }
 
 bool isOutputPinValid(output_t outputPin)
 {
-  return outputPin < OUTPUT_MAX;
+    return outputPin < OUTPUT_MAX;
 }
 
 bool isLedValid(ParkingShield::led_t led)
 {
-  return led < ParkingShield::LED_MAX;
+    return led < ParkingShield::LED_MAX;
 }
 
 void setPinMode(Device::pin_t pin, Device::pinmode_t pinmode)
 {
-  Device::setPinMode(pin, pinmode);
+    Device::setPinMode(pin, pinmode);
 }
 
 void setupOutput()
 {
-  for (unsigned int output = 0; output < OUTPUT_MAX; output++)
-    setPinMode(output_pins[output], Device::PINMODE_OUTPUT);
+    for (unsigned int output = 0; output < OUTPUT_MAX; output++)
+        setPinMode(output_pins[output], Device::PINMODE_OUTPUT);
 }
 
 void setupInput()
 {
-  for (unsigned int input = 0; input < INPUT_MAX; input++)
-    setPinMode(input_pins[input], Device::PINMODE_INPUT);
+    for (unsigned int input = 0; input < INPUT_MAX; input++)
+        setPinMode(input_pins[input], Device::PINMODE_INPUT);
 }
 
 unsigned int analogReadPin(input_t inputPin)
 {
-  if (isInputPinValid(inputPin))
-    return Device::analogReadPin(input_pins[inputPin]); 
+    if (isInputPinValid(inputPin))
+        return Device::analogReadPin(input_pins[inputPin]);
 
-  return 0;
+    return 0;
 }
 
 void analogWritePin(output_t outputPin, uint8_t value)
 {
-  if (isOutputPinValid(outputPin))
-    Device::analogWritePin(output_pins[outputPin], value);
+    if (isOutputPinValid(outputPin))
+        Device::analogWritePin(output_pins[outputPin], value);
 }
 
 Device::signal_t digitalReadPin(input_t inputPin)
 {
-  if (isInputPinValid(inputPin))
-    return Device::digitalReadPin(input_pins[inputPin]);
+    if (isInputPinValid(inputPin))
+        return Device::digitalReadPin(input_pins[inputPin]);
 
-  return Device::SIGNAL_LOW;
+    return Device::SIGNAL_LOW;
 }
 
 void digitalWritePin(output_t outputPin, Device::signal_t signal)
 {
-  if (isOutputPinValid(outputPin))
-    Device::digitalWritePin(output_pins[outputPin], signal);
+    if (isOutputPinValid(outputPin))
+        Device::digitalWritePin(output_pins[outputPin], signal);
 }
 
 void ParkingShield::setLed(led_t led, bool enable)
 {
-  if (isLedValid(led))
-    digitalWritePin(static_cast<output_t>(led), enable ? Device::SIGNAL_LOW : Device::SIGNAL_HIGH);
+    if (isLedValid(led))
+        digitalWritePin(static_cast<output_t>(led), enable ? Device::SIGNAL_LOW : Device::SIGNAL_HIGH);
 }
 
 void setAllLeds(bool enable)
 {
-  for (unsigned int led = 0; led < ParkingShield::LED_MAX; led++)
-    ParkingShield::setLed(static_cast<ParkingShield::led_t>(led), enable);
+    for (unsigned int led = 0; led < ParkingShield::LED_MAX; led++)
+        ParkingShield::setLed(static_cast<ParkingShield::led_t>(led), enable);
 }
 
 void ParkingShield::Countdown::update(Scheduler * scheduler)
@@ -136,57 +136,57 @@ void ParkingShield::Countdown::update(Scheduler * scheduler)
 // Public
 // ---------------------------------------------------------------------------------------------------- //
 ParkingShield::ParkingShield(Scheduler & scheduler)
-  : sevenSeg(sevensegment_pins), countdown(*this), _scheduler(scheduler)
+    : sevenSeg(sevensegment_pins), countdown(*this), _scheduler(scheduler)
 {
-  setupOutput();
-  setupInput();
+    setupOutput();
+    setupInput();
 
-  setAllLeds(false);
+    setAllLeds(false);
 }
 
 bool ParkingShield::buttonS1Pressed(void) const
 {
-  static unsigned long int millisForButtonLock = 0;
-  static bool buttonLocked = false;
-  
-  if (millisForButtonLock < Device::milliseconds())
-    buttonLocked = false;
-  
-  if (Device::digitalReadPin(input_pins[BUTTON_S1]) == Device::SIGNAL_HIGH && !buttonLocked)
-  {
-    millisForButtonLock = Device::milliseconds() + 250;
-    buttonLocked = true;
-    return true;
-  }
-  return false;
+    static unsigned long int millisForButtonLock = 0;
+    static bool buttonLocked = false;
+
+    if (millisForButtonLock < Device::milliseconds())
+        buttonLocked = false;
+
+    if (Device::digitalReadPin(input_pins[BUTTON_S1]) == Device::SIGNAL_HIGH && !buttonLocked)
+    {
+        millisForButtonLock = Device::milliseconds() + 250;
+        buttonLocked = true;
+        return true;
+    }
+    return false;
 }
 
 bool ParkingShield::buttonS2Pressed(void) const
 {
-  static unsigned long int millisForButtonLock = 0;
-  static bool buttonLocked = false;
-  
-  if (millisForButtonLock < Device::milliseconds())
-    buttonLocked = false;
-  
-  if (Device::digitalReadPin(input_pins[BUTTON_S2]) == Device::SIGNAL_HIGH && !buttonLocked)
-  {
-    millisForButtonLock = Device::milliseconds() + 250;
-    buttonLocked = true;
-    return true;
-  }
-  return false;
+    static unsigned long int millisForButtonLock = 0;
+    static bool buttonLocked = false;
+
+    if (millisForButtonLock < Device::milliseconds())
+        buttonLocked = false;
+
+    if (Device::digitalReadPin(input_pins[BUTTON_S2]) == Device::SIGNAL_HIGH && !buttonLocked)
+    {
+        millisForButtonLock = Device::milliseconds() + 250;
+        buttonLocked = true;
+        return true;
+    }
+    return false;
 }
 
 unsigned int ParkingShield::getTemperature(void) const
-{ 
-  unsigned int tempVoltage = analogReadPin(TEMPERATURE);
-  return (tempVoltage / 1024.0) * 5.0 * 100.0 - 5.0; 
+{
+    unsigned int tempVoltage = analogReadPin(TEMPERATURE);
+    return (tempVoltage / 1024.0) * 5.0 * 100.0 - 5.0;
 }
 
 unsigned int ParkingShield::getBrightness(void) const
 {
-  return analogReadPin(BRIGHTNESS);
+    return analogReadPin(BRIGHTNESS);
 }
 
 
@@ -197,42 +197,42 @@ void ParkingShield::setBuzzer(bool enable) const
 
 void ParkingShield::beep(int frequencyInHertz, long timeInMilliseconds) const
 {
-    int x;   
+    int x;
     long delayAmount = (long)(1000000/frequencyInHertz);
     long loopTime = (long)((timeInMilliseconds*1000)/(delayAmount*2));
-    for (x=0;x<loopTime;x++)   
-    {    
+    for (x=0;x<loopTime;x++)
+    {
         setBuzzer(true);
         Device::delayMicros(delayAmount);
         setBuzzer(false);
         Device::delayMicros(delayAmount);
-    }    
-   
+    }
+
     Device::delayMillis(20);
 }
 
 void ParkingShield::playTone(int tone, int duration) const
 {
-  for (long i = 0; i < duration * 1000L; i += tone * 2)
-  {
-    setBuzzer(true);
-    Device::delayMicros(tone);
-    setBuzzer(false);
-    Device::delayMicros(tone);
-  }
+    for (long i = 0; i < duration * 1000L; i += tone * 2)
+    {
+        setBuzzer(true);
+        Device::delayMicros(tone);
+        setBuzzer(false);
+        Device::delayMicros(tone);
+    }
 }
 
 void ParkingShield::playNote(char note, int duration) const
 {
-  char names[] = { 'c', 'd', 'e', 'f', 'g', 'a', 'b', 'C' };
-  int tones[] = { 1915, 1700, 1519, 1432, 1275, 1136, 1014, 956 };
+    char names[] = { 'c', 'd', 'e', 'f', 'g', 'a', 'b', 'C' };
+    int tones[] = { 1915, 1700, 1519, 1432, 1275, 1136, 1014, 956 };
 
-  // play the tone corresponding to the note name
-  for (int i = 0; i < 8; i++)
-  {
-    if (names[i] == note)
-      playTone(tones[i], duration);
-  }
+    // play the tone corresponding to the note name
+    for (int i = 0; i < 8; i++)
+    {
+        if (names[i] == note)
+            playTone(tones[i], duration);
+    }
 }
 
 void ParkingShield::playMarch(bool shortVersion) const
@@ -263,25 +263,25 @@ void ParkingShield::playMarch(bool shortVersion) const
     //http://www.musicnotes.com/sheetmusic/mtd.asp?ppn=MN0016254
     //this is just a translation of said sheet music to frequencies / time in ms
     //used 500 ms for a quart note
-    
-    beep(a, 500); 
-    beep(a, 500);     
-    beep(a, 500); 
-    beep(f, 350); 
+
+    beep(a, 500);
+    beep(a, 500);
+    beep(a, 500);
+    beep(f, 350);
     beep(cH, 150);
-    
+
     beep(a, 500);
     beep(f, 350);
     beep(cH, 150);
     beep(a, 1000);
     //first bit
-    
+
     beep(eH, 500);
     beep(eH, 500);
-    beep(eH, 500);    
-    beep(fH, 350); 
+    beep(eH, 500);
+    beep(fH, 350);
     beep(cH, 150);
-    
+
     beep(gS, 500);
     beep(f, 350);
     beep(cH, 150);
@@ -291,107 +291,107 @@ void ParkingShield::playMarch(bool shortVersion) const
       return;
 
     //second bit...
-    
+
     beep(aH, 500);
-    beep(a, 350); 
+    beep(a, 350);
     beep(a, 150);
     beep(aH, 500);
-    beep(gSH, 250); 
+    beep(gSH, 250);
     beep(gH, 250);
-    
+
     beep(fSH, 125);
-    beep(fH, 125);    
+    beep(fH, 125);
     beep(fSH, 250);
     Device::delayMillis(250);
-    beep(aS, 250);    
-    beep(dSH, 500);  
-    beep(dH, 250);  
-    beep(cSH, 250);  
+    beep(aS, 250);
+    beep(dSH, 500);
+    beep(dH, 250);
+    beep(cSH, 250);
     //start of the interesting bit
-    
-    beep(cH, 125);  
-    beep(b, 125);  
-    beep(cH, 250);      
+
+    beep(cH, 125);
+    beep(b, 125);
+    beep(cH, 250);
     Device::delayMillis(250);
-    beep(f, 125);  
-    beep(gS, 500);  
-    beep(f, 375);  
-    beep(a, 125); 
-    
-    beep(cH, 500); 
-    beep(a, 375);  
-    beep(cH, 125); 
-    beep(eH, 1000); 
+    beep(f, 125);
+    beep(gS, 500);
+    beep(f, 375);
+    beep(a, 125);
+
+    beep(cH, 500);
+    beep(a, 375);
+    beep(cH, 125);
+    beep(eH, 1000);
     //more interesting stuff (this doesn't quite get it right somehow)
-    
+
     beep(aH, 500);
-    beep(a, 350); 
+    beep(a, 350);
     beep(a, 150);
     beep(aH, 500);
-    beep(gSH, 250); 
+    beep(gSH, 250);
     beep(gH, 250);
-    
+
     beep(fSH, 125);
-    beep(fH, 125);    
+    beep(fH, 125);
     beep(fSH, 250);
     Device::delayMillis(250);
-    beep(aS, 250);    
-    beep(dSH, 500);  
-    beep(dH, 250);  
-    beep(cSH, 250);  
+    beep(aS, 250);
+    beep(dSH, 500);
+    beep(dH, 250);
+    beep(cSH, 250);
     //repeat... repeat
-    
-    beep(cH, 125);  
-    beep(b, 125);  
-    beep(cH, 250);      
+
+    beep(cH, 125);
+    beep(b, 125);
+    beep(cH, 250);
     Device::delayMillis(250);
-    beep(f, 250);  
-    beep(gS, 500);  
-    beep(f, 375);  
-    beep(cH, 125); 
-           
-    beep(a, 500);            
-    beep(f, 375);            
-    beep(c, 125);            
+    beep(f, 250);
+    beep(gS, 500);
+    beep(f, 375);
+    beep(cH, 125);
+
+    beep(a, 500);
+    beep(f, 375);
+    beep(c, 125);
     beep(a, 1000);
 }
 
 void ParkingShield::playMelody(void) const
 {
-  static int length = 15; // the number of notes
-  static char notes[] = "ccggaagffeeddc "; // a space represents a rest
-  static int beats[] = { 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 4 };
-  static int tempo = 300;
-  
-  for (int i = 0; i < length; i++)
-  {
-    if (notes[i] == ' ') {
-      Device::delayMillis(beats[i] * tempo); // rest
-    } else {
-      playNote(notes[i], beats[i] * tempo);
-    }
+    static int length = 15; // the number of notes
+    static char notes[] = "ccggaagffeeddc "; // a space represents a rest
+    static int beats[] = { 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 4 };
+    static int tempo = 300;
 
-    // pause between notes
-    Device::delayMillis(tempo / 2); 
-  }
+    for (int i = 0; i < length; i++)
+    {
+        if (notes[i] == ' ') {
+            Device::delayMillis(beats[i] * tempo); // rest
+        } else {
+            playNote(notes[i], beats[i] * tempo);
+        }
+
+        // pause between notes
+        Device::delayMillis(tempo / 2);
+    }
 }
 
 void ParkingShield::countdownStart(unsigned long millisPerStep)
 {
-  if (!_scheduler.taskExists(&countdown))
-  {
-    countdown.active = true;
-    _scheduler.addTask(&countdown, millisPerStep, this);
-  }
+    if (!_scheduler.taskExists(&countdown))
+    {
+        countdown.active = true;
+        _scheduler.addTask(&countdown, millisPerStep, this);
+    }
 }
 
 void ParkingShield::countdownStop(void)
 {
-  countdown.active = false;
-  _scheduler.removeTask(&countdown);
+    countdown.active = false;
+    _scheduler.removeTask(&countdown);
 }
 
 bool ParkingShield::countdownActive(void) const
 {
-  return countdown.active;
+    return countdown.active;
 }
