@@ -1,5 +1,5 @@
 #ifndef PARKINGSHIELD_H
-	#define PARKINGSHIELD_H
+    #define PARKINGSHIELD_H
 
 #include <SevenSeg.h>
 #include <Task.h>
@@ -13,115 +13,115 @@
  */
 class ParkingShield
 {
-	public:
-	    typedef enum {
-	      GREEN_LED,
-	      YELLOW_LED,
-	      RED_LED,
-	      LED_MAX
-	    } led_t;
-	    
-		/**
-		 * @brief Constructor
-		 */
-		ParkingShield(Scheduler & scheduler);
+    public:
+        typedef enum {
+          GREEN_LED,
+          YELLOW_LED,
+          RED_LED,
+          LED_MAX
+        } led_t;
 
-	    /**
-	     * @brief Enables or disables an LED.
-	     * @param led The led to set on or off.
-	     * @param enable "True" enables and "false" disables the given led.
-	     */
-	    static void setLed(led_t led, bool enable);
+        /**
+         * @brief Constructor
+         */
+        ParkingShield(Scheduler & scheduler);
+
+        /**
+         * @brief Enables or disables an LED.
+         * @param led The led to set on or off.
+         * @param enable "True" enables and "false" disables the given led.
+         */
+        static void setLed(led_t led, bool enable);
  
-		/**
-		 * @brief Returns the actual measured temperature.
-		 * @return Temperature as centigrade.
-		 */
-		unsigned int getTemperature(void) const;
-	
-		/**
-		 * @brief Returns the actual measured brightness.
-		 * @return Brightness.
-		 */
-		unsigned int getBrightness(void) const;
+        /**
+         * @brief Returns the actual measured temperature.
+         * @return Temperature as centigrade.
+         */
+        unsigned int getTemperature(void) const;
     
-		/**
-		 * @brief Returns whether button S1 is pressed or not.
-		 * @return True if pressed, false otherwise.
-		 */
-		bool buttonS1Pressed(void) const;
-		
-		/**
-		 * @brief Returns whether button S2 is pressed or not.
-		 * @return True if pressed, false otherwise.
-		 */
-		bool buttonS2Pressed(void) const;
+        /**
+         * @brief Returns the actual measured brightness.
+         * @return Brightness.
+         */
+        unsigned int getBrightness(void) const;
     
-		/**
-		 * @brief Use this to make sound with the buzzer.
-		 * @param enable If true, buzzer makes noise. If false, buzzer is off.
-		 */
-		void setBuzzer(bool enable) const;
+        /**
+         * @brief Returns whether button S1 is pressed or not.
+         * @return True if pressed, false otherwise.
+         */
+        bool buttonS1Pressed(void) const;
 
-		/**
-		 * @brief Let's the buzzer make sound.
-		 * @param frequenzyInHertz The frequenz in hertz.
-		 * @param timeInMilliseconds The duration of the sound in milliseconds.
-		 */
-		void beep(int frequencyInHertz, long timeInMilliseconds) const;
+        /**
+         * @brief Returns whether button S2 is pressed or not.
+         * @return True if pressed, false otherwise.
+         */
+        bool buttonS2Pressed(void) const;
 
-		/**
-		 * @brief Play's a tone.
-		 * @param tone The tone to play.
-		 * @param duration The duration in microseconds.
-		 */
-		void playTone(int tone, int duration) const;
+        /**
+         * @brief Use this to make sound with the buzzer.
+         * @param enable If true, buzzer makes noise. If false, buzzer is off.
+         */
+        void setBuzzer(bool enable) const;
 
-		/**
-		 * @brief Play's a note.
-		 * @param note The note to play.
-		 * @param duration The duration in microseconds.
-		 */
-		void playNote(char note, int duration) const;
+        /**
+         * @brief Let's the buzzer make sound.
+         * @param frequenzyInHertz The frequenz in hertz.
+         * @param timeInMilliseconds The duration of the sound in milliseconds.
+         */
+        void beep(int frequencyInHertz, long timeInMilliseconds) const;
 
-		/**
-		 *@brief Play's a popular melody :-D
-		 */
-		void playMelody(void) const;
+        /**
+         * @brief Play's a tone.
+         * @param tone The tone to play.
+         * @param duration The duration in microseconds.
+         */
+        void playTone(int tone, int duration) const;
 
-		/**
-		 * @brief Play's the storm trooper march :-D
-		 * @brief Much thanks to tagliati (https://gist.github.com/tagliati/1804108).
-		 */
-		void playMarch(bool shortVersion = true) const;
+        /**
+         * @brief Play's a note.
+         * @param note The note to play.
+         * @param duration The duration in microseconds.
+         */
+        void playNote(char note, int duration) const;
 
-		/**
-		 * @brief Asynchronous decrements the number on the seven segment display by 1 every second.
+        /**
+         *@brief Play's a popular melody :-D
+         */
+        void playMelody(void) const;
+
+        /**
+         * @brief Play's the storm trooper march :-D
+         * @brief Much thanks to tagliati (https://gist.github.com/tagliati/1804108).
+         */
+        void playMarch(bool shortVersion = true) const;
+
+        /**
+         * @brief Asynchronous decrements the number on the seven segment display by 1 every second.
      * @param millisPerStep Timer will be counted down every x milliseconds.
-		 */
-		void countdownStart(unsigned long millisPerStep = 1000);
+         */
+        void countdownStart(unsigned long millisPerStep = 1000);
 
-		/**
-		 * @brief Stops the countdown started by countdownStart().
-		 */
-		void countdownStop(void);
+        /**
+         * @brief Stops the countdown started by countdownStart().
+         */
+        void countdownStop(void);
 
-		/**
-		 * @brief Tells whether a countdown is active or not.
-		 * @return True if countdown is active, false otherwise.
-		 */
-		bool countdownActive(void) const;
+        /**
+         * @brief Tells whether a countdown is active or not.
+         * @return True if countdown is active, false otherwise.
+         */
+        bool countdownActive(void) const;
 
-		/**
-		 * @brief Access to the scheduler.
-		 * @return The scheduler.
-		 */
-		Scheduler & scheduler(void);
+        /**
+         * @brief Access to the scheduler.
+         * @return The scheduler.
+         */
+        Scheduler & scheduler(void);
 
-		/// The seven segment display, accessable from outside.
-		SevenSeg sevenSeg;
+        /// The seven segment display, accessable from outside.
+        SevenSeg sevenSeg;
 
-	private:
+    private:
         class Countdown : public Task
         {
         public:
