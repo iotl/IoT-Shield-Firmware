@@ -97,8 +97,9 @@ class ParkingShield
 
 		/**
 		 * @brief Asynchronous decrements the number on the seven segment display by 1 every second.
+     * @param millisPerStep Timer will be counted down every x milliseconds.
 		 */
-		void countdownStart(void);
+		void countdownStart(unsigned long millisPerStep = 1000);
 
 		/**
 		 * @brief Stops the countdown started by countdownStart().

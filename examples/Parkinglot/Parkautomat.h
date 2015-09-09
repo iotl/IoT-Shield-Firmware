@@ -6,8 +6,9 @@ class Parkautomat
 {
 
 public:
-    Parkautomat(ParkingShield &shield) : shield(shield) {}
-    void updateState(void);
+    Parkautomat(ParkingShield &shield) : _shield(shield), state(OFF) {}
+    void update(void);
+    
 private:
     void ledsOff();
     bool shieldIsOccupied();
@@ -29,7 +30,7 @@ private:
         PAYED_TIMEOUT_WARNING
     } State;
 
-    ParkingShield shield;
+    ParkingShield & _shield;
     State state;
 };
 

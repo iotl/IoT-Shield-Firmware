@@ -35,19 +35,9 @@ void output(void * nothing)
 }
 
 void buttonS1Handler(void)
-{ 
-    static unsigned long int millisForButtonLock = 0;
-    static bool buttonS1Locked = false;
-    
-    if (millisForButtonLock < millis())
-    buttonS1Locked = false;
-    
-    if (shield.buttonS1Pressed() && !buttonS1Locked)
-    {
-    counter = ++counter % 10;
-      millisForButtonLock = millis() + 250;
-      buttonS1Locked = true;
-    }
+{
+    if (shield.buttonS1Pressed())
+      counter = ++counter % 10;
 }
 
 void buttonS2Handler(void)

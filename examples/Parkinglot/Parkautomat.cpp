@@ -1,51 +1,47 @@
 #include <ParkingShield.h>
-#include <DeviceArduino.h>
 #include "Parkautomat.h"
 
 static const int TIMEOUT_WARNING_THRESHOLD = 1;
 
-bool getTaster();
-
 bool Parkautomat::counterIsTimedOut()
 {
-    return shield.sevenSeg.number() == 0;
+    return _shield.sevenSeg.number() == 0;
 }
 
 bool Parkautomat::shieldIsOccupied()
 {
-    return shield.getBrightness() < 900;
+    return _shield.getBrightness() <= 1023;
 }
 
-void Parkautomat::updateState(void)
+void Parkautomat::update(void)
 {
     switch(state)
     {
-    case OFF:
-        updateStateOff();
-        break;
-    case UNPAYED:
-        updateStateUnpayed();
-        break;
-    case PAYED:
-        updateStatePayed();
-        break;
-    case PAYED_TIMEOUT_WARNING:
-        updateStatePayedTimeoutWarning();
-        break;
+      case OFF:                   updateStateOff();
+                                  break;
+      case UNPAYED:               updateStateUnpayed();
+                                  break;
+      case PAYED:                 updateStatePayed();
+                                  break;
+      case PAYED_TIMEOUT_WARNING: updateStatePayedTimeoutWarning();
+                                  break;
+
+      default:                    break;
     }
 }
 
 void Parkautomat::ledsOff()
 {
-    shield.setLed(ParkingShield::GREEN_LED, false);
-    shield.setLed(ParkingShield::YELLOW_LED, false);
-    shield.setLed(ParkingShield::RED_LED, false);
+    _shield.setLed(ParkingShield::GREEN_LED, false);
+    _shield.setLed(ParkingShield::YELLOW_LED, false);
+    _shield.setLed(ParkingShield::RED_LED, false);
 }
 
 void Parkautomat::enterStateOff()
 {
     state = OFF;
     ledsOff();
+    _shield.sevenSeg.clear();
 }
 
 void Parkautomat::updateStateOff()
@@ -60,16 +56,19 @@ void Parkautomat::enterStateUnpayed()
 {
     state = UNPAYED;
     ledsOff();
-    shield.setLed(ParkingShield::RED_LED, true);
+    _shield.sevenSeg.showNumber(0);
+    _shield.setLed(ParkingShield::RED_LED, true);
 }
 
 void Parkautomat::updateStateUnpayed()
 {
-    if( getTaster() )
+    if( _shield.buttonS1Pressed() )
     {
         enterStatePayed();
-        shield.sevenSeg++;
+        _shield.sevenSeg.showNumber(0);
+        _shield.sevenSeg++;
     }
+    
     if( !shieldIsOccupied() )
     {
         enterStateOff();
@@ -80,22 +79,27 @@ void Parkautomat::enterStatePayed()
 {
     state = PAYED;
     ledsOff();
-    shield.setLed(ParkingShield::GREEN_LED, true);
+    _shield.setLed(ParkingShield::GREEN_LED, true);
+    _shield.countdownStart(2000);
 }
 
 void Parkautomat::updateStatePayed()
 {
-    if( getTaster() )
+    if( _shield.buttonS1Pressed() )
+        _shield.sevenSeg++;
+    else
     {
-        shield.sevenSeg++;
+      //_shield.sevenSeg--;
     }
-    if( TIMEOUT_WARNING_THRESHOLD == shield.sevenSeg.number() )
+        
+    if( TIMEOUT_WARNING_THRESHOLD == _shield.sevenSeg.number() )
     {
         enterStatePayedTimeoutWarning();
     }
+    
     if( !shieldIsOccupied() )
     {
-        shield.sevenSeg.showNumber(0);
+        _shield.sevenSeg.clear();
         enterStateOff();
     }
 }
@@ -104,30 +108,34 @@ void Parkautomat::enterStatePayedTimeoutWarning()
 {
     state = PAYED_TIMEOUT_WARNING;
     ledsOff();
-    shield.setLed(ParkingShield::YELLOW_LED, true);
+    _shield.setLed(ParkingShield::YELLOW_LED, true);
 }
 
 void Parkautomat::updateStatePayedTimeoutWarning()
 {
-    if( getTaster() )
+    if( _shield.buttonS1Pressed() )
     {
-        shield.sevenSeg++;
+        _shield.sevenSeg++;
     }
-    if( TIMEOUT_WARNING_THRESHOLD < shield.sevenSeg.number() )
+    else
+    {
+      //_shield.sevenSeg--;
+    }
+    
+    if( TIMEOUT_WARNING_THRESHOLD < _shield.sevenSeg.number() )
     {
         enterStatePayed();
     }
+    
     if( counterIsTimedOut() )
     {
-        shield.sevenSeg.showNumber(0);
         enterStateUnpayed();
     }
+    
     if( !shieldIsOccupied() )
     {
-        shield.sevenSeg.showNumber(0);
         enterStateOff();
     }
 }
-
 
 

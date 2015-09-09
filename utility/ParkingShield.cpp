@@ -126,7 +126,6 @@ void updateCountdown(void * data)
     if (number < 1)
     {
       shield->countdownStop();
-      shield->sevenSeg.clear();
       return;
     }
 
@@ -149,18 +148,36 @@ ParkingShield::ParkingShield(Scheduler & scheduler)
 
 bool ParkingShield::buttonS1Pressed(void) const
 {
-	if (digitalReadPin(BUTTON_S1) == Device::SIGNAL_HIGH)
-		return true;
-  else
-    return false;
+  static unsigned long int millisForButtonLock = 0;
+  static bool buttonLocked = false;
+  
+  if (millisForButtonLock < Device::milliseconds())
+    buttonLocked = false;
+  
+  if (Device::digitalReadPin(input_pins[BUTTON_S1]) == Device::SIGNAL_HIGH && !buttonLocked)
+  {
+    millisForButtonLock = Device::milliseconds() + 250;
+    buttonLocked = true;
+    return true;
+  }
+  return false;
 }
 
 bool ParkingShield::buttonS2Pressed(void) const
 {
-  if (digitalReadPin(BUTTON_S2) == Device::SIGNAL_HIGH)
+  static unsigned long int millisForButtonLock = 0;
+  static bool buttonLocked = false;
+  
+  if (millisForButtonLock < Device::milliseconds())
+    buttonLocked = false;
+  
+  if (Device::digitalReadPin(input_pins[BUTTON_S2]) == Device::SIGNAL_HIGH && !buttonLocked)
+  {
+    millisForButtonLock = Device::milliseconds() + 250;
+    buttonLocked = true;
     return true;
-  else
-		return false;
+  }
+  return false;
 }
 
 unsigned int ParkingShield::getTemperature(void) const
@@ -361,10 +378,13 @@ void ParkingShield::playMelody(void) const
   }
 }
 
-void ParkingShield::countdownStart(void)
+void ParkingShield::countdownStart(unsigned long millisPerStep)
 {
-  _countdown = true;
-  _scheduler.addTask(updateCountdown, 1000, this);
+  if (!_scheduler.taskExists(updateCountdown))
+  {
+    _countdown = true;
+    _scheduler.addTask(updateCountdown, millisPerStep, this);
+  }
 }
 
 void ParkingShield::countdownStop(void)
