@@ -17,16 +17,20 @@ void Parkautomat::update(void)
 {
     switch(state)
     {
-      case OFF:                   updateStateOff();
-                                  break;
-      case UNPAYED:               updateStateUnpayed();
-                                  break;
-      case PAYED:                 updateStatePayed();
-                                  break;
-      case PAYED_TIMEOUT_WARNING: updateStatePayedTimeoutWarning();
-                                  break;
-
-      default:                    break;
+        case OFF:
+            updateStateOff();
+            break;
+        case UNPAYED:
+            updateStateUnpayed();
+            break;
+        case PAYED:
+            updateStatePayed();
+            break;
+        case PAYED_TIMEOUT_WARNING:
+            updateStatePayedTimeoutWarning();
+            break;
+        default:
+            break;
     }
 }
 
