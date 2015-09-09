@@ -12,7 +12,7 @@ class Output : public Task
     Output(ParkingShield & shield) : _shield(shield) {}
     virtual ~Output() {}
     
-    virtual void update(Scheduler * scheduler)
+    virtual void update(Scheduler & scheduler)
     {
       Serial.print("Button S1: ");
       Serial.println(_shield.buttonS1Pressed());
