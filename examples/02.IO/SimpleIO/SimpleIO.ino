@@ -8,5 +8,5 @@ void setup()
 void loop()
 {
   bool buttonPressed = shield.buttonS1Pressed();
-  shield.setLed(RED_LED, buttonPressed);
+  shield.setLed(ParkingShield::RED_LED, buttonPressed);
 }
