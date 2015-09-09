@@ -7,40 +7,40 @@ Scheduler::Scheduler(void)
 		setTask(i, 0, 0, 0, 0, false);
 }
 
-bool Scheduler::addTask(void (*func)(void *), unsigned long int timer, void * data, bool reshot)
+bool Scheduler::addTask(Task * task, unsigned long int timer, void * data, bool reshot)
 {
 	// Search for a free slot to add the function.
 	for (unsigned char i = 0; i < MAX_TASKS; i++)
     {
-		if (tasks[i].func == 0)
-		{
-      		setTask(i, func, timer, Device::milliseconds(), data, reshot);
-			return true;
-		}
+      if (tasks[i].task == 0)
+      {
+            setTask(i, task, timer, Device::milliseconds(), data, reshot);
+        return true;
+      }
     }
 	return false;
 }
 
-bool Scheduler::taskExists(void (*func)(void *))
+bool Scheduler::taskExists(Task * task)
 {
-        for (unsigned char i = 0; i < MAX_TASKS; i++)
-        {
-			if (tasks[i].func == func)
-                return true;
-        }
-        return false;
+  for (unsigned char i = 0; i < MAX_TASKS; i++)
+  {
+    if (tasks[i].task == task)
+      return true;
+  }
+  return false;
 }
 
-void Scheduler::removeTask(void (*func)(void *))
+void Scheduler::removeTask(Task * task)
 {
 	for (unsigned char i = 0; i < MAX_TASKS; i++)
-    {
-		if (tasks[i].func == func)
+  {
+		if (tasks[i].task == task)
 		{
 			removeTask(i);
 			break;
 		}
-    }
+  }
 }
 
 void Scheduler::scheduleTasks(void)
@@ -49,12 +49,12 @@ void Scheduler::scheduleTasks(void)
 	for (unsigned char i = 0; i < MAX_TASKS; i++)
 	{
 		// If we have a task in this slot ...
-		if (tasks[i].func != 0)
+		if (tasks[i].task != 0)
 		{
 			if (Device::milliseconds() - tasks[i].timestamp >= tasks[i].timer)
 			{
 				// Execute it.
-				tasks[i].func(tasks[i].data);
+				tasks[i].task->update(this);
 				// If this is a periodically task, reset its timer.
 				if (tasks[i].reshot)
           			tasks[i].timestamp = Device::milliseconds();
@@ -66,11 +66,11 @@ void Scheduler::scheduleTasks(void)
 	}
 }
 
-void Scheduler::setTask(unsigned char index, void (*func)(void *), unsigned long int timer, unsigned long int timestamp, void * data, bool reshot)
+void Scheduler::setTask(unsigned char index, Task * task, unsigned long int timer, unsigned long int timestamp, void * data, bool reshot)
 {
 	if (index >= 0 && index < MAX_TASKS)
 	{
-		tasks[index].func = func;
+		tasks[index].task = task;
 		tasks[index].timer = timer;
 		tasks[index].data = data;
 		tasks[index].timestamp = timestamp;
