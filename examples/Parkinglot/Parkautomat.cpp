@@ -91,10 +91,6 @@ void Parkautomat::updateStatePayed()
 {
     if( _shield.buttonS1Pressed() )
         _shield.sevenSeg++;
-    else
-    {
-      //_shield.sevenSeg--;
-    }
         
     if( TIMEOUT_WARNING_THRESHOLD == _shield.sevenSeg.number() )
     {
@@ -120,10 +116,6 @@ void Parkautomat::updateStatePayedTimeoutWarning()
     if( _shield.buttonS1Pressed() )
     {
         _shield.sevenSeg++;
-    }
-    else
-    {
-      //_shield.sevenSeg--;
     }
     
     if( TIMEOUT_WARNING_THRESHOLD < _shield.sevenSeg.number() )
