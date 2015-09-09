@@ -69,8 +69,7 @@ void Parkautomat::updateStateUnpayed()
     if( _shield.buttonS1Pressed() )
     {
         enterStatePayed();
-        _shield.sevenSeg.showNumber(0);
-        _shield.sevenSeg++;
+        _shield.sevenSeg.showNumber( 1 + TIMEOUT_WARNING_THRESHOLD);
     }
     
     if( !shieldIsOccupied() )
