@@ -49,6 +49,7 @@ void executeCommand(const String &str)
   else if (str == F("BUZZER_1_MARCH"))
     shield.playMarch();
 
+/*
   else if (str == F("7SEG_1_0"))
     shield.showNumber(0);
 
@@ -81,7 +82,7 @@ void executeCommand(const String &str)
 
   else if (str == F("7SEG_1_DOWN"))
     shield.countDown();
-
+*/
 }
 
 void loop()
