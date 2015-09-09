@@ -7,17 +7,17 @@ Scheduler::Scheduler(void)
 		setTask(i, 0, 0, 0, 0, false);
 }
 
-bool Scheduler::addTask(Task * task, unsigned long int timer, void * data, bool reshot)
+bool Scheduler::addTask(Task * task, unsigned long int timer, bool reshot)
 {
 	// Search for a free slot to add the function.
 	for (unsigned char i = 0; i < MAX_TASKS; i++)
+  {
+    if (tasks[i].task == 0)
     {
-      if (tasks[i].task == 0)
-      {
-            setTask(i, task, timer, Device::milliseconds(), data, reshot);
-        return true;
-      }
+      setTask(i, task, timer, Device::milliseconds(), reshot);
+      return true;
     }
+  }
 	return false;
 }
 
@@ -66,13 +66,12 @@ void Scheduler::scheduleTasks(void)
 	}
 }
 
-void Scheduler::setTask(unsigned char index, Task * task, unsigned long int timer, unsigned long int timestamp, void * data, bool reshot)
+void Scheduler::setTask(unsigned char index, Task * task, unsigned long int timer, unsigned long int timestamp, bool reshot)
 {
 	if (index >= 0 && index < MAX_TASKS)
 	{
 		tasks[index].task = task;
 		tasks[index].timer = timer;
-		tasks[index].data = data;
 		tasks[index].timestamp = timestamp;
 		tasks[index].reshot = reshot;
 	}
@@ -80,5 +79,5 @@ void Scheduler::setTask(unsigned char index, Task * task, unsigned long int time
 
 void Scheduler::removeTask(unsigned long int index)
 {
-	setTask(index, 0, 0, 0, 0, false);
+	setTask(index, 0, 0, 0, false);
 }
