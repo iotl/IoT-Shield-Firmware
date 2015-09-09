@@ -1,8 +1,10 @@
 #include <ParkingShield.h>
 #include <Scheduler.h>
+#include "Output.h"
 
 Scheduler scheduler;
-ParkingShield shield(scheduler);
+ParkingShield shield;
+Output output;
 unsigned char counter = 0;
 
 void setup(void)
@@ -19,19 +21,6 @@ void loop(void)
   buttonS2Handler();
   showNumber(counter);
   scheduler.scheduleTasks();
-}
-
-void output(void * nothing)
-{
-    Serial.print("Button S1: ");
-    Serial.println(shield.buttonS1Pressed());
-    Serial.print("Button S2: ");
-    Serial.println(shield.buttonS2Pressed());
-    Serial.print("Licht: ");
-    Serial.println(shield.getBrightness());
-    Serial.print("Temperatur: ");
-    Serial.print(shield.getTemperature());
-    Serial.println(" Grad Celsius");
 }
 
 void buttonS1Handler(void)

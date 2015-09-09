@@ -1,6 +1,5 @@
 #include <Scheduler.h>
 #include "TestTask.h"
-#include <Arduino.h>
 
 Scheduler scheduler;
 TestTask testtask;

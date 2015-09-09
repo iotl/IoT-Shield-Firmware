@@ -2,7 +2,7 @@
 	#define PARKINGSHIELD_H
 
 #include <SevenSeg.h>
-#include <Scheduler.h>
+#include <Task.h>
 #include <stdint.h>
 
 /**
@@ -11,7 +11,7 @@
  * @author Jörn Hoffmann (jhoffmann)
  * @author Marc Vester (XaserLE)
  */
-class ParkingShield
+class ParkingShield : public Task
 {
 	public:
 	    typedef enum {
@@ -24,7 +24,7 @@ class ParkingShield
 		/**
 		 * @brief Constructor
 		 */
-		ParkingShield(Scheduler & scheduler);
+		ParkingShield(void);
 
 	    /**
 	     * @brief Enables or disables an LED.
@@ -123,7 +123,6 @@ class ParkingShield
 
 	private:
 		bool _countdown;
-		Scheduler & _scheduler;
 };
 
 #endif

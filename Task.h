@@ -6,7 +6,6 @@ class Scheduler;
 class Task
 {
   public:
-    Task(void) {}
     virtual ~Task() {}
     
     virtual void update(Scheduler * scheduler) = 0;
