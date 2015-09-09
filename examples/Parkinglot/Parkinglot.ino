@@ -9,17 +9,11 @@ unsigned char counter = 0;
 
 void setup(void)
 {
-  //scheduler.addTask(updateParkautomat, 1000);
 }
 
 void loop(void)
 {
   scheduler.scheduleTasks();
-  parkautomat.update();
-}
-
-void updateParkautomat(void * nothing)
-{
   parkautomat.update();
 }
 

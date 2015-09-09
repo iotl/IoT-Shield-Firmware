@@ -10,8 +10,7 @@ bool Parkautomat::counterIsTimedOut()
 
 bool Parkautomat::shieldIsOccupied()
 {
-    Serial.print(_shield.getBrightness());
-    return _shield.getBrightness() <= 1023;
+    return _shield.getBrightness() <= 1000;
 }
 
 void Parkautomat::update(void)
