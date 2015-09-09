@@ -70,6 +70,7 @@ void Parkautomat::updateStateUnpayed()
     {
         enterStatePayed();
         _shield.sevenSeg.showNumber( 1 + TIMEOUT_WARNING_THRESHOLD);
+        _shield.countdownStart(2000);
     }
     
     if( !shieldIsOccupied() )
@@ -83,7 +84,6 @@ void Parkautomat::enterStatePayed()
     state = PAYED;
     ledsOff();
     _shield.setLed(ParkingShield::GREEN_LED, true);
-    _shield.countdownStart(2000);
 }
 
 void Parkautomat::updateStatePayed()
