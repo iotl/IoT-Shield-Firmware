@@ -54,7 +54,7 @@ void Scheduler::scheduleTasks(void)
 			if (Device::milliseconds() - tasks[i].timestamp >= tasks[i].timer)
 			{
 				// Execute it.
-				tasks[i].task->update(this);
+				tasks[i].task->update(*this);
 				// If this is a periodically task, reset its timer.
 				if (tasks[i].reshot)
           			tasks[i].timestamp = Device::milliseconds();

@@ -1,5 +1,17 @@
 #include <ParkingShield.h>
+#include <Task.h>
 #include "Parkautomat.h"
+
+void Countdown::update(Scheduler & scheduler)
+{
+    char number = shield.sevenSeg.number();
+    
+    if (number < 1)
+        return;
+
+    shield.sevenSeg.showNumber(number-1);
+}
+
 
 static const int TIMEOUT_WARNING_THRESHOLD = 1;
 
@@ -46,6 +58,7 @@ void Parkautomat::enterStateOff()
     state = OFF;
     ledsOff();
     _shield.sevenSeg.clear();
+    _scheduler.removeTask(&countdown);
 }
 
 void Parkautomat::updateStateOff()
@@ -62,6 +75,7 @@ void Parkautomat::enterStateUnpayed()
     ledsOff();
     _shield.sevenSeg.showNumber(0);
     _shield.setLed(ParkingShield::RED_LED, true);
+    _scheduler.removeTask(&countdown);
 }
 
 void Parkautomat::updateStateUnpayed()
@@ -70,7 +84,7 @@ void Parkautomat::updateStateUnpayed()
     {
         enterStatePayed();
         _shield.sevenSeg.showNumber( 1 + TIMEOUT_WARNING_THRESHOLD);
-        _shield.countdownStart(2000);
+        _scheduler.addTask(&countdown, 2000);
     }
     
     if( !shieldIsOccupied() )

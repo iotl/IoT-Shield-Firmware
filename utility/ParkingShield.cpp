@@ -114,29 +114,10 @@ void setAllLeds(bool enable)
         ParkingShield::setLed(static_cast<ParkingShield::led_t>(led), enable);
 }
 
-void ParkingShield::Countdown::update(Scheduler * scheduler)
-{
-    if(!active)
-    {
-        return;
-    }
-
-    char number = shield.sevenSeg.number();
-    if (number < 1)
-    {
-        active = false;
-        shield.countdownStop();
-        return;
-    }
-
-    shield.sevenSeg.showNumber(number-1);
-}
-
 // ---------------------------------------------------------------------------------------------------- //
 // Public
 // ---------------------------------------------------------------------------------------------------- //
-ParkingShield::ParkingShield(Scheduler & scheduler)
-    : sevenSeg(sevensegment_pins), countdown(*this), _scheduler(scheduler)
+ParkingShield::ParkingShield(void) : sevenSeg(sevensegment_pins)
 {
     setupOutput();
     setupInput();
@@ -387,24 +368,4 @@ void ParkingShield::playMelody(void) const
         // pause between notes
         Device::delayMillis(tempo / 2);
     }
-}
-
-void ParkingShield::countdownStart(unsigned long millisPerStep)
-{
-    if (!_scheduler.taskExists(&countdown))
-    {
-        countdown.active = true;
-        _scheduler.addTask(&countdown, millisPerStep, this);
-    }
-}
-
-void ParkingShield::countdownStop(void)
-{
-    countdown.active = false;
-    _scheduler.removeTask(&countdown);
-}
-
-bool ParkingShield::countdownActive(void) const
-{
-    return countdown.active;
 }

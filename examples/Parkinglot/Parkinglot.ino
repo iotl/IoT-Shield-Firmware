@@ -3,9 +3,8 @@
 #include "Parkautomat.h"
 
 Scheduler scheduler;
-ParkingShield shield(scheduler);
-Parkautomat parkautomat(shield);
-unsigned char counter = 0;
+ParkingShield shield;
+Parkautomat parkautomat(shield, scheduler);
 
 void setup(void)
 {

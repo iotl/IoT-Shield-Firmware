@@ -2,14 +2,13 @@
     #define PARKINGSHIELD_H
 
 #include <SevenSeg.h>
-#include <Task.h>
 #include <stdint.h>
 
 /**
  * @brief The ParkingShield class is designed for the ParkingShield platform, an arduino extension board from J�rn Hoffmann at the University of Leipzig.
  * @brief It provides functionality to turn LEDs on/off, measure temperature and brightness, get button states.
- * @author Jörn Hoffmann (jhoffmann)
  * @author Marc Vester (XaserLE)
+ * @author Jörn Hoffmann (jhoffmann)
  */
 class ParkingShield
 {
@@ -24,7 +23,7 @@ class ParkingShield
         /**
          * @brief Constructor
          */
-        ParkingShield(Scheduler & scheduler);
+        ParkingShield(void);
 
         /**
          * @brief Enables or disables an LED.
@@ -101,48 +100,13 @@ class ParkingShield
          */
         void playMarch(bool shortVersion = true) const;
 
-        /**
-         * @brief Asynchronous decrements the number on the seven segment display by 1 every second.
-     * @param millisPerStep Timer will be counted down every x milliseconds.
-         */
-        void countdownStart(unsigned long millisPerStep = 1000);
-
-        /**
-         * @brief Stops the countdown started by countdownStart().
-         */
-        void countdownStop(void);
-
-        /**
-         * @brief Tells whether a countdown is active or not.
-         * @return True if countdown is active, false otherwise.
-         */
-        bool countdownActive(void) const;
-
-        /**
-         * @brief Access to the scheduler.
-         * @return The scheduler.
-         */
-        Scheduler & scheduler(void);
-
         /// The seven segment display, accessable from outside.
         SevenSeg sevenSeg;
 
     private:
-        class Countdown : public Task
-        {
-        public:
-            Countdown(ParkingShield & shield) : active(false), shield(shield) {}
-            void update(Scheduler * scheduler);
-            bool active;
-        private:
-            ParkingShield & shield;
-        };
-
         static const int BRIGHTNESS_ARRAY_SIZE = 8;
         int brightnessValuesPointer = 0;
         int brightnessValues[BRIGHTNESS_ARRAY_SIZE] = {0};
-        Countdown countdown;
-        Scheduler & _scheduler;
 };
 
 #endif

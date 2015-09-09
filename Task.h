@@ -20,7 +20,7 @@ class Task
      * @brief The update function is called by the scheduler.
      * @param The scheduler that called this function (cause maybe we want to unregister ourself).
      */
-    virtual void update(Scheduler * scheduler) = 0;
+    virtual void update(Scheduler & scheduler) = 0;
 };
 
 #endif TASK_H
