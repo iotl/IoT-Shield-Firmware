@@ -189,6 +189,19 @@ unsigned int ParkingShield::getBrightness(void) const
     return analogReadPin(BRIGHTNESS);
 }
 
+unsigned int ParkingShield::getAverageBrightness(void)
+{
+    brightnessValues[brightnessValuesPointer] = analogReadPin(BRIGHTNESS);
+    brightnessValuesPointer++;
+    brightnessValuesPointer %= BRIGHTNESS_ARRAY_SIZE;
+    int average = 0;
+    int i;
+    for( i = 0; i < BRIGHTNESS_ARRAY_SIZE; ++i)
+    {
+        average += brightnessValues[i];
+    }
+    return average / BRIGHTNESS_ARRAY_SIZE;
+}
 
 void ParkingShield::setBuzzer(bool enable) const
 {

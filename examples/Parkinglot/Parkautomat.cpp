@@ -10,7 +10,7 @@ bool Parkautomat::counterIsTimedOut()
 
 bool Parkautomat::shieldIsOccupied()
 {
-    return _shield.getBrightness() <= 1000;
+    return _shield.getAverageBrightness() <= 1000;
 }
 
 void Parkautomat::update(void)
