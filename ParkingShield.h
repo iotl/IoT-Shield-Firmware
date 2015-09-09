@@ -46,6 +46,12 @@ class ParkingShield
         unsigned int getBrightness(void) const;
 
         /**
+         * @brief Returns the average of the last 8 measured brightness values.
+         * @return Brightness.
+         */
+        unsigned int getAverageBrightness(void);
+
+        /**
          * @brief Returns whether button S1 is pressed or not.
          * @return True if pressed, false otherwise.
          */
@@ -132,6 +138,9 @@ class ParkingShield
             ParkingShield & shield;
         };
 
+        static const int BRIGHTNESS_ARRAY_SIZE = 8;
+        int brightnessValuesPointer = 0;
+        int brightnessValues[BRIGHTNESS_ARRAY_SIZE] = {0};
         Countdown countdown;
         Scheduler & _scheduler;
 };
