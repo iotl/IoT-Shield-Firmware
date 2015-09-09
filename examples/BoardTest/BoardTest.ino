@@ -4,13 +4,13 @@
 
 Scheduler scheduler;
 ParkingShield shield;
-Output output;
+Output output(shield);
 unsigned char counter = 0;
 
 void setup(void)
 {
     Serial.begin(9600);
-    scheduler.addTask(output, 1000);
+    scheduler.addTask(&output, 1000);
     shield.playMarch();
     shield.playMelody();
 }
