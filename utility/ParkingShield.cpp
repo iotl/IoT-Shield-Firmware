@@ -1,6 +1,7 @@
 #include <ParkingShield.h>
 //#include <DeviceEmulator.h>
 #include <DeviceArduino.h>
+#include <Scheduler.h>
 
 // ---------------------------------------------------------------------------------------------------- //
 // Helper 
@@ -113,32 +114,29 @@ void setAllLeds(bool enable)
     ParkingShield::setLed(static_cast<ParkingShield::led_t>(led), enable);
 }
 
-void updateCountdown(void * data)
+void ParkingShield::Countdown::update(Scheduler * scheduler)
 {
-  ParkingShield * shield = static_cast<ParkingShield *>(data);
-
-  if (shield != 0)
-  {
-    if (!shield->countdownActive())
-      return;
-
-    char number = shield->sevenSeg.number();
-    if (number < 1)
+    if(!active)
     {
-      shield->countdownStop();
-      return;
+        return;
     }
 
-    number--;
-    shield->sevenSeg.showNumber(number);
-  }
+    char number = shield.sevenSeg.number();
+    if (number < 1)
+    {
+        active = false;
+        shield.countdownStop();
+        return;
+    }
+
+    shield.sevenSeg.showNumber(number-1);
 }
 
 // ---------------------------------------------------------------------------------------------------- //
 // Public
 // ---------------------------------------------------------------------------------------------------- //
 ParkingShield::ParkingShield(Scheduler & scheduler)
-  : sevenSeg(sevensegment_pins), _countdown(false), _scheduler(scheduler)
+  : sevenSeg(sevensegment_pins), countdown(*this), _scheduler(scheduler)
 {
   setupOutput();
   setupInput();
@@ -380,20 +378,20 @@ void ParkingShield::playMelody(void) const
 
 void ParkingShield::countdownStart(unsigned long millisPerStep)
 {
-  if (!_scheduler.taskExists(updateCountdown))
+  if (!_scheduler.taskExists(&countdown))
   {
-    _countdown = true;
-    _scheduler.addTask(updateCountdown, millisPerStep, this);
+    countdown.active = true;
+    _scheduler.addTask(&countdown, millisPerStep, this);
   }
 }
 
 void ParkingShield::countdownStop(void)
 {
-  _countdown = false;
-  _scheduler.removeTask(updateCountdown);
+  countdown.active = false;
+  _scheduler.removeTask(&countdown);
 }
 
 bool ParkingShield::countdownActive(void) const
 {
-  return _countdown;
+  return countdown.active;
 }

@@ -11,7 +11,7 @@
  * @author Jörn Hoffmann (jhoffmann)
  * @author Marc Vester (XaserLE)
  */
-class ParkingShield : public Task
+class ParkingShield
 {
 	public:
 	    typedef enum {
@@ -24,7 +24,7 @@ class ParkingShield : public Task
 		/**
 		 * @brief Constructor
 		 */
-		ParkingShield(void);
+		ParkingShield(Scheduler & scheduler);
 
 	    /**
 	     * @brief Enables or disables an LED.
@@ -122,7 +122,18 @@ class ParkingShield : public Task
 		SevenSeg sevenSeg;
 
 	private:
-		bool _countdown;
+        class Countdown : public Task
+        {
+        public:
+            Countdown(ParkingShield & shield) : active(false), shield(shield) {}
+            void update(Scheduler * scheduler);
+            bool active;
+        private:
+            ParkingShield & shield;
+        };
+
+        Countdown countdown;
+        Scheduler & _scheduler;
 };
 
 #endif
