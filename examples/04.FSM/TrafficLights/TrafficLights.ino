@@ -34,6 +34,7 @@ typedef enum : unsigned
   YELLOW  = 1 << 2,
   GREEN   = 1 << 3
 } led_t;
+
 bool tick;
 state_t state = DISABLE;
 ParkingShield shield;
@@ -49,16 +50,20 @@ void loop()
   nextState();
   output();
 
-  // Debounce the input and visualize insensitive state by disabling the decimal point
+  // Debounce the input by delaying the execution.
+  // This insensitive state is visualized by disabling the decimal point.
   if (tick)
   {
     tick = 0;
-    shield.sevenSeg.showDecimalPoint(false);
+    shield.sevenSeg.showDecimalPoint(show);
     delay(500);
-    shield.sevenSeg.showDecimalPoint(true);
+    shield.sevenSeg.showDecimalPoint(show);
   }
 }
 
+/**
+ * Enables an LED when its position in the bitmask is set.
+ */
 void showLeds(unsigned ledBitmask)
 {
   shield.setLed(ParkingShield::RED_LED,     ledBitmask & RED);

@@ -1,5 +1,4 @@
-#define BUTTON_S1 A0
-#define LED_1 A4
+#include <ParkingShield.hY
 
 void setup()
 {
@@ -9,7 +8,6 @@ void setup()
 
 void loop()
 {
-  bool buttonPressed;
-  buttonPressed = digitalRead(BUTTON_S1);
+  bool buttonPressed = digitalRead(BUTTON_S1);
   digitalWrite(LED_1, !buttonPressed);
 }
