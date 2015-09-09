@@ -4,7 +4,7 @@
 Scheduler::Scheduler(void)
 {
 	for (unsigned char i = 0; i < MAX_TASKS; i++)
-		setTask(i, 0, 0, 0, 0, false);
+		setTask(i, 0, 0, 0, false);
 }
 
 bool Scheduler::addTask(Task * task, unsigned long int timer, bool reshot)
