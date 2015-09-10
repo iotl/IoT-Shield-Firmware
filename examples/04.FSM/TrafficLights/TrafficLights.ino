@@ -19,7 +19,6 @@
 /// The states of a traffic light
 typedef enum : unsigned
 {
-  DISABLE,    // off
   STOP,       // red
   STOP_GO,    // red and yellow
   GO,         // green
@@ -35,8 +34,8 @@ typedef enum : unsigned
   GREEN   = 1 << 3
 } led_t;
 
-bool tick;
-state_t state = DISABLE;
+bool tick, reset;
+state_t state = STOP;
 ParkingShield shield;
 
 void setup()
@@ -65,12 +64,10 @@ void showLeds(unsigned ledBitmask)
 void input()
 {
   // S1 pressed = allow the FSM to continue
-  if (shield.buttonS1Pressed())
-    tick = true;
+   tick = shield.buttonS1Pressed();
 
-  // S2 pressed = "asynchronously" reset the FSM
-  if (shield.buttonS2Pressed())
-    state = DISABLE;
+  // S2 pressed = reset the FSM
+  reset = shield.buttonS2Pressed();
 }
 
 /** 
@@ -79,13 +76,13 @@ void input()
  */
 void nextState()
 {
+  if (reset) {
+    state = STOP;
+    return;
+  }
+
   switch (state)
   {
-    case DISABLE:
-      if (tick)
-        state = STOP;
-      break;
-
     case STOP:
       if (tick)
         state = STOP_GO;
@@ -106,8 +103,6 @@ void nextState()
         state = STOP;
       break;
   }
-
-  tick = false;
 }
 
 /**
@@ -118,13 +113,8 @@ void nextState()
 void output()
 {
   static unsigned ledBitmask = 0;
-  
   switch (state)
   {
-    case DISABLE:
-      ledBitmask = 0;
-      break;
-
     case STOP:
       ledBitmask = RED;
       break;
