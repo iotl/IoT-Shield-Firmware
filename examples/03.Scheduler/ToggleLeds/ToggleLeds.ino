@@ -19,4 +19,7 @@ void loop()
   
   shield.setLed(ParkingShield::YELLOW_LED, false);
   delay(500);
+
+  // Very long time insensitive
+  shield.setLed(ParkingShield::GREEN_LED, shield.buttonS1Pressed());
 }

@@ -16,5 +16,6 @@ void setup()
 
 void loop()
 {
-  sched.scheduleTasks();  
+  sched.scheduleTasks();
+  shield.setLed(ParkingShield::GREEN_LED, shield.buttonS1Pressed());
 }
