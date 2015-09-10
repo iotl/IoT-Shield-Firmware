@@ -1,5 +1,5 @@
 #ifndef PARKINGSHIELD_H
-    #define PARKINGSHIELD_H
+#define PARKINGSHIELD_H
 
 #include <SevenSeg.h>
 #include <stdint.h>
@@ -54,13 +54,13 @@ class ParkingShield
          * @brief Returns whether button S1 is pressed or not.
          * @return True if pressed, false otherwise.
          */
-        bool buttonS1Pressed(void) const;
+        bool buttonS1Pressed(void);
 
         /**
          * @brief Returns whether button S2 is pressed or not.
          * @return True if pressed, false otherwise.
          */
-        bool buttonS2Pressed(void) const;
+        bool buttonS2Pressed(void);
 
         /**
          * @brief Use this to make sound with the buzzer.
@@ -109,10 +109,21 @@ class ParkingShield
         SevenSeg sevenSeg;
 
     private:
-        int debounceInterval = 250;
+        // Defines
+        typedef struct {
+          bool locked;
+          unsigned long timestamp;
+        } button_lock_t;
+
+        // Variables
+        button_lock_t buttonLocks[2];        
+        unsigned int debounceInterval = 250;
         static const int BRIGHTNESS_ARRAY_SIZE = 8;
         int brightnessValuesPointer = 0;
         int brightnessValues[BRIGHTNESS_ARRAY_SIZE] = {0};
+        
+        // Methods
+        bool sampleButton(unsigned int button, button_lock_t &buttonLock);
 };
 
 #endif

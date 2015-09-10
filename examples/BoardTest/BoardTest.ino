@@ -11,8 +11,8 @@ void setup(void)
 {
     Serial.begin(9600);
     scheduler.addTask(&output, 1000);
-    shield.playMarch();
-    shield.playMelody();
+    //shield.playMarch();
+    //shield.playMelody();
 }
 
 void loop(void)

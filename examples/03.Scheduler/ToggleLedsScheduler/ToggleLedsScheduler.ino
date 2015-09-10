@@ -11,7 +11,8 @@ LedTask yellowTask(ParkingShield::YELLOW_LED, shield);
 void setup() 
 {
   sched.addTask(&redTask, 1000, true);
-  sched.addTask(&yellowTask, 500, true);    
+  sched.addTask(&yellowTask, 500, true);
+  shield.setDebounceIntervall(0);
 }
 
 void loop()
