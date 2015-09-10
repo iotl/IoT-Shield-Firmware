@@ -40,25 +40,13 @@ state_t state = DISABLE;
 ParkingShield shield;
 
 void setup()
-{
-  shield.sevenSeg.showDecimalPoint(true);
-}
+{ }
 
 void loop()
 {
   input();
   nextState();
   output();
-
-  // Debounce the input by delaying the execution.
-  // This insensitive state is visualized by disabling the decimal point.
-  if (tick)
-  {
-    tick = 0;
-    shield.sevenSeg.showDecimalPoint(show);
-    delay(500);
-    shield.sevenSeg.showDecimalPoint(show);
-  }
 }
 
 /**
@@ -118,6 +106,8 @@ void nextState()
         state = STOP;
       break;
   }
+
+  tick = false;
 }
 
 /**
