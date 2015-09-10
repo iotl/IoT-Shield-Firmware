@@ -1,5 +1,4 @@
 #include <ParkingShield.h>
-
 ParkingShield shield;
 
 void setup() 
@@ -9,9 +8,9 @@ void setup()
 
 void loop() 
 {
-  Serial.print(F("Light intensity is : " ));
-  Serial.print(shield.getBrightness() / 1024. * 100);
-  Serial.print(" %% \n");
-
+  Serial.print(F("Temperature is : " ));
+  Serial.print(shield.getTemperature());
+  Serial.println(" °C");
+  
   delay(1000);
 }

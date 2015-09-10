@@ -3,9 +3,7 @@
 ParkingShield shield;
 
 void setup() 
-{
-  Serial.begin(9600);
-}
+{ }
 
 void loop()
 {  
@@ -14,5 +12,9 @@ void loop()
   
   shield.setLed(ParkingShield::GREEN_LED, enable);
 
-  delay(1000);  
+  shield.setLed(ParkingShield::GREEN_RED, enable);
+
+  shield.setLed(ParkingShield::GREEN_LED, enable);
+
+ 
 }
