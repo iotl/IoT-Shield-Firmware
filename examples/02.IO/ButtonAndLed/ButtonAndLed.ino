@@ -2,7 +2,9 @@
 ParkingShield shield;
 
 void setup()
-{ }
+{
+  shield.setDebounceInterval(0);
+}
 
 void loop()
 {
