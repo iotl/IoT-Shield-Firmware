@@ -13,6 +13,12 @@
 class Scheduler
 {
 	public:
+		// Make use of function pointers comfortable.
+		typedef void (*func_ptr)(void);
+		typedef void (*func_ptr_scheduler)(Scheduler &);
+		typedef void (*func_ptr_data)(void *);
+		typedef void (*func_ptr_scheduler_data)(Scheduler &, void *);
+
 		/**
 		 * @brief Constructor, initializes the scheduler by initializing all tasks.
 		 * @param maxTasks Maximum number of tasks the scheduler can handle.
@@ -29,6 +35,11 @@ class Scheduler
 		 */
 		bool addTask(Task * task, unsigned long timer, bool reshot = true);
 
+		bool addTask(func_ptr * func, unsigned long timer, bool reshot = true);
+		bool addTask(func_ptr_scheduler * func, unsigned long timer, bool reshot = true);
+		bool addTask(func_ptr_data * func, unsigned long timer, bool reshot = true);
+		bool addTask(func_ptr_scheduler_data * func, unsigned long timer, bool reshot = true);
+
     /** @brief Tells us if a task was already added to the scheduler.
      *  @param task Pointer to the task object that should be executed.
      *  @return True if task (func) is already in the scheduling list, false otherwise.
@@ -40,6 +51,11 @@ class Scheduler
 		 * @param task Pointer to the task object that should be executed.
 		 */
 		void removeTask(Task * task);
+
+		void removeTask(func_ptr func);
+		void removeTask(func_ptr_scheduler func);
+		void removeTask(func_ptr_data func);
+		void removeTask(func_ptr_scheduler_data);
 		
 		/**
 		 * @brief This is the main function to schedule all tasks. Should be called every frame in the main loop.

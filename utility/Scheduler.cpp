@@ -1,6 +1,76 @@
 #include <Scheduler.h>
 #include <DeviceArduino.h>
 
+
+//----------------------------------------------------------------------------------------------------
+// Helper
+//----------------------------------------------------------------------------------------------------
+
+/**
+* @brief The TaskHelper class provides an interface that makes it possible
+* @brief to only add function pointers to the scheduler (otherwise we would
+* @brief need to inherit from the task object everytime, even if we only want
+* @brief to task a simple function). Only the scheduler will use this class internally.
+*/
+class TaskHelper : public Task
+{
+	public:
+		TaskHelper(func_ptr func) : _func(func) { setTasktype(TASKHELPER); }
+
+		virtual void update(Scheduler & scheduler) const { _func(); }
+
+	private:
+		func_ptr const _func;
+};
+
+class TaskHelperScheduler : public Task
+{
+	public:
+		TaskHelperScheduler(func_ptr_scheduler func) : _func(func) {}
+
+		virtual void update(Scheduler & scheduler) const { _func(scheduler); }
+
+	private:
+		func_ptr_scheduler const _func;
+};
+
+class TaskHelperData : public Task
+{
+	public:
+		TaskHelperData(func_ptr_data func, void * data) : _func(func), _data(data) {}
+
+		virtual void update(Scheduler & scheduler) const { _func(_data); }
+
+	private:
+		func_ptr_data const _func;
+		void * const _data;
+};
+
+class TaskHelperSchedulerData : public Task
+{
+	public:
+		TaskHelperSchedulerData(func_ptr_scheduler_data func, void * data) : _func(func), _data(data) {}
+
+		virtual void update(Scheduler & scheduler) const { _func(scheduler, _data); }
+
+	private:
+		func_ptr_scheduler_data const _func;
+		void * const _data;
+};
+
+bool isTaskHelper(Task & task)
+{
+	if (task.tasktype() == Task::TASKHELPER)
+		return true;
+
+	return false;
+}
+
+
+//----------------------------------------------------------------------------------------------------
+// Public
+//----------------------------------------------------------------------------------------------------
+
 Scheduler::Scheduler(void)
 {
 	for (unsigned char i = 0; i < MAX_TASKS; i++)
@@ -65,6 +135,11 @@ void Scheduler::scheduleTasks(void)
 		}
 	}
 }
+
+
+//----------------------------------------------------------------------------------------------------
+// Private
+//----------------------------------------------------------------------------------------------------
 
 void Scheduler::setTask(unsigned char index, Task * task, unsigned long int timer, unsigned long int timestamp, bool reshot)
 {

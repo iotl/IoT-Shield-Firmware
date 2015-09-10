@@ -11,6 +11,13 @@ class Scheduler;
 class Task
 {
   public:
+    typedef enum
+    {
+        TASK,
+        TASKHELPER
+    } task_t;
+
+    Task(void) : _tasktype(TASK) {}
     /**
      * @brief Destructor.
      */
@@ -21,6 +28,14 @@ class Task
      * @param The scheduler that called this function (cause maybe we want to unregister ourself).
      */
     virtual void update(Scheduler & scheduler) = 0;
+
+    task_t tasktype(void) const { return _tasktype; }
+
+    protected:
+        void setTasktype(task_t newTasktype) { _tasktype = newTasktype; }
+
+    private:
+        task_t _tasktype;
 };
 
 #endif TASK_H
