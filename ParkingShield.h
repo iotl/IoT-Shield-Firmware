@@ -100,10 +100,16 @@ class ParkingShield
          */
         void playMarch(bool shortVersion = true) const;
 
+        /**
+         *@brief Set debounce interval
+         */
+        void setDebounceInterval(unsigned int interval);
+
         /// The seven segment display, accessable from outside.
         SevenSeg sevenSeg;
 
     private:
+        int debounceInterval = 250;
         static const int BRIGHTNESS_ARRAY_SIZE = 8;
         int brightnessValuesPointer = 0;
         int brightnessValues[BRIGHTNESS_ARRAY_SIZE] = {0};
