@@ -1,5 +1,8 @@
 #include <ParkingShield.h>
 
+#define BUTTON_S1 A0
+#define LED_1 A4
+
 void setup()
 {
   pinMode(BUTTON_S1, INPUT);
