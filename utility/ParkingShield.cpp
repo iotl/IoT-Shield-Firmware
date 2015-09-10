@@ -127,15 +127,15 @@ ParkingShield::ParkingShield(void) : sevenSeg(sevensegment_pins)
 
 bool ParkingShield::buttonS1Pressed(void) const
 {
-    static unsigned long int millisForButtonLock = 0;
+    static unsigned long timestamp = 0;
     static bool buttonLocked = false;
 
-    if (millisForButtonLock < Device::milliseconds())
+    if (Device::milliseconds() - timestamp >= 250)
         buttonLocked = false;
 
     if (Device::digitalReadPin(input_pins[BUTTON_S1]) == Device::SIGNAL_HIGH && !buttonLocked)
     {
-        millisForButtonLock = Device::milliseconds() + 250;
+        timestamp = Device::milliseconds();
         buttonLocked = true;
         return true;
     }
@@ -144,15 +144,15 @@ bool ParkingShield::buttonS1Pressed(void) const
 
 bool ParkingShield::buttonS2Pressed(void) const
 {
-    static unsigned long int millisForButtonLock = 0;
+    static unsigned long timestamp = 0;
     static bool buttonLocked = false;
 
-    if (millisForButtonLock < Device::milliseconds())
+    if (Device::milliseconds() - timestamp >= 250)
         buttonLocked = false;
 
     if (Device::digitalReadPin(input_pins[BUTTON_S2]) == Device::SIGNAL_HIGH && !buttonLocked)
     {
-        millisForButtonLock = Device::milliseconds() + 250;
+        timestamp = Device::milliseconds();
         buttonLocked = true;
         return true;
     }
