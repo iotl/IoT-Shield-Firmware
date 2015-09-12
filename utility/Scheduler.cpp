@@ -22,7 +22,7 @@ bool Scheduler::addTask(void (* func)(void), unsigned long timer, bool reshot)
 bool Scheduler::addTask(void (* func)(void *), void * data, unsigned long timer, bool reshot)
 {
 	Task * task = new TaskHelperWithData(func, data);
-	return addTask(task, timer, reshot, true, true);
+	return addTask(task, timer, reshot, false, true);
 }
 
 template<typename T>
