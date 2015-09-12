@@ -102,7 +102,7 @@ class Scheduler
 	     * @brief Internal function that removes a task given by an index (faster than searching for the function pointer).
 	     * @param index The index for the task. Valid values: [0 : MAX_TASKS-1].
 	     */
-	    inline void removeTask(unsigned long int index);
+	    void removeTask(unsigned long int index);
 
 	    /**
 	     * @brief Gives the index of a task if its in the scheduling list.

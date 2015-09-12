@@ -4,7 +4,6 @@
 #include <TaskHelper.h>
 
 // Make use of function pointers comfortable.
-typedef void (*func_ptr)(void);
 typedef void (*func_ptr_with_data)(void *);
 
 /**

@@ -39,10 +39,8 @@ void TaskControlBlock::run(void)
   {
     task()->update();
 
-    // If this is a periodically task, reset its timer.
     if (reshot())
-	  setActualTimestamp();
-    // Else delete the task.
+      setActualTimestamp();
     else
   	  remove();
   }
