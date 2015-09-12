@@ -2,6 +2,7 @@
 	#define SCHEDULER_H
 
 #include <Task.h>
+#include <TaskControlBlock.h>
 
 /**
  * @brief The Scheduler class provides basic scheduling capabilities. Simply add task objects to it with a timer and it
@@ -13,18 +14,6 @@
 class Scheduler
 {
 	public:
-		// Make use of function pointers comfortable.
-		typedef void (*func_ptr)(void);
-		typedef void (*func_ptr_scheduler)(Scheduler &);
-		typedef void (*func_ptr_data)(void *);
-		typedef void (*func_ptr_scheduler_data)(Scheduler &, void *);
-
-		/**
-		 * @brief Constructor, initializes the scheduler by initializing all tasks.
-		 * @param maxTasks Maximum number of tasks the scheduler can handle.
-		 */
-		Scheduler();
-		
 		/**
 		 * @brief Adds a task to the scheduler.
 		 * @param task Pointer to the task object that should be executed.
@@ -35,16 +24,17 @@ class Scheduler
 		 */
 		bool addTask(Task * task, unsigned long timer, bool reshot = true);
 
-		bool addTask(func_ptr * func, unsigned long timer, bool reshot = true);
-		bool addTask(func_ptr_scheduler * func, unsigned long timer, bool reshot = true);
-		bool addTask(func_ptr_data * func, unsigned long timer, bool reshot = true);
-		bool addTask(func_ptr_scheduler_data * func, unsigned long timer, bool reshot = true);
+		bool addTask(void (* func)(void), unsigned long timer, bool reshot = true);
+		bool addTask(void (* func)(void *), void * data, unsigned long timer, bool reshot = true);
 
     /** @brief Tells us if a task was already added to the scheduler.
      *  @param task Pointer to the task object that should be executed.
      *  @return True if task (func) is already in the scheduling list, false otherwise.
      */
-    bool taskExists(Task * task);
+    bool taskExists(Task * task) const;
+
+    bool taskExists(void (* func)(void)) const;
+    bool taskExists(void (* func)(void *)) const;
 		
 		/**
 		 * @brief Adds a task to the scheduler.
@@ -52,10 +42,8 @@ class Scheduler
 		 */
 		void removeTask(Task * task);
 
-		void removeTask(func_ptr func);
-		void removeTask(func_ptr_scheduler func);
-		void removeTask(func_ptr_data func);
-		void removeTask(func_ptr_scheduler_data);
+		void removeTask(void (* func)(void));
+		void removeTask(void (* func)(void *));
 		
 		/**
 		 * @brief This is the main function to schedule all tasks. Should be called every frame in the main loop.
@@ -63,42 +51,22 @@ class Scheduler
 		void scheduleTasks(void);
 		
 	private:
-    /**
-     * @brief Internal function that sets a task with the given parameters.
-     * @param index Index for the tasks array. Valid values: [0 : MAX_TASKS-1].
-     * @param task Pointer to the task object that should be executed.
-     * @param timer Time in milliseconds after task will be executed.
-     * @param timestamp Reference value for calculation for the execution time, should be the actually timestampt normally.
-     * @param reshot If true, function will be called after every timer milliseconds, otherwise it will be deleted after one call.
-     */
-    inline void setTask(unsigned char index, Task * task, unsigned long int timer, unsigned long int timestamp, bool reshot);
+    bool addTask(Task * task, unsigned long timer, bool reshot, bool isTaskHelper, bool taskHelperHasData);
 
     /**
      * @brief Internal function that removes a task given by an index (faster than searching for the function pointer).
      * @param index The index for the task. Valid values: [0 : MAX_TASKS-1].
      */
     inline void removeTask(unsigned long int index);
-  
-		/**
-		 * @brief The Task struct holds all necessary information for a tast to schedule, the task pointer, the timer
-		 * @brief and the information whether it is a single shot or not.
-		 */
-		struct TCB
-		{
-			// Will be executed after timer milliseconds. NULL indicates this slot is free.
-			Task * task;
-			// Time in milliseconds after task will be called.
-			unsigned long int timer;
-			// Time when task was added. Needed for calculation.
-			unsigned long int timestamp;
-			// If true, task will be executed after every timer milliseconds, otherwise it will be deleted after one call.
-			bool reshot;
-		};
-		
-		// Maximum number of tasks.
-		static unsigned char const MAX_TASKS = 20;
-		// Array with the tasks to schedule.
-		TCB tasks[MAX_TASKS];
+
+    char indexOf(Task * task) const;
+    char indexOf(void (* func)(void)) const;
+    char indexOf(void (* func)(void *)) const;
+
+	// Maximum number of tasks.
+	static char const MAX_TASKS = 20;
+	// Array with the tasks to schedule.
+	TaskControlBlock tasks[MAX_TASKS];
 };
 
 #endif //SCHEDULER_H

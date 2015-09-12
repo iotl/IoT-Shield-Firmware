@@ -13,6 +13,7 @@ void setup(void)
     scheduler.addTask(&output, 1000);
     //shield.playMarch();
     //shield.playMelody();
+    scheduler.addTask(func, 500);
 }
 
 void loop(void)
@@ -21,6 +22,17 @@ void loop(void)
   buttonS2Handler();
   showNumber(counter);
   scheduler.scheduleTasks();
+}
+
+void func(void)
+{
+  static int i = 0;
+  if (i > 20)
+    scheduler.removeTask(func);
+  i++;
+  Serial.println("func");
+  if (scheduler.taskExists(func))
+    Serial.println("exists");
 }
 
 void buttonS1Handler(void)
@@ -57,4 +69,3 @@ void showNumber(unsigned char counter)
       shield.setLed(ParkingShield::RED_LED, false);
   }
 }
-
