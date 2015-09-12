@@ -7,11 +7,13 @@
 typedef void (*func_ptr)(void);
 
 /**
-* @brief The TaskHelper class provides an interface that makes it possible
-* @brief to only add function pointers to the scheduler (otherwise we would
-* @brief need to inherit from the task object everytime, even if we only want
-* @brief to task a simple function). Only the scheduler will use this class internally.
-*/
+ * @brief The TaskHelper class provides an interface that makes it possible
+ * @brief to only add function pointers to the scheduler (otherwise we would
+ * @brief need to inherit from the task object everytime, even if we only want
+ * @brief to task a simple function). Only the scheduler will use this class internally.
+ * @author Marc Vester (XaserLE)
+ * @author Jörn Hoffmann (jhoffmann)
+ */
 class TaskHelper : public Task
 {
 	public:
@@ -28,13 +30,16 @@ class TaskHelper : public Task
 		virtual void update(void) { _func(); }
 
 		/**
-		 * @brief Access to the function pointer of this task.
-		 * @return A pointer to the function of this task.
+		 * @brief Compares the function pointer of this task with the given one.
+		 * @param func The pointer to compare with the tasks one.
+		 * @return True if pointers are equal, false otherwise.
 		 */
-		//virtual func_ptr func(void) const { return _func; }
 		virtual bool funcEquals(func_ptr func) const { return func == _func; }
 
 	protected:
+		/**
+		 * @brief This Constructor is protected cause we need a default constructor in subclasses that sets this _func to 0.
+		 */
 		TaskHelper(void) : _func(0) {}
 
 	private:

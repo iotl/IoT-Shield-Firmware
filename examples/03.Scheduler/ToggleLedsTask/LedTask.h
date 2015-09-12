@@ -7,7 +7,7 @@ class LedTask : public Task
   LedTask(ParkingShield::led_t led, ParkingShield &shield) : _led(led), _shield(shield)
   {}
   
-  void update(Scheduler &sched)
+  void update(void)
   {
     _shield.setLed(_led, _enable);
     _enable = !_enable;

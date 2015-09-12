@@ -7,6 +7,11 @@
 typedef void (*func_ptr)(void);
 typedef void (*func_ptr_with_data)(void *);
 
+/**
+ * The TaskHelperWithData class is a subclass of TaskHelper that has data to forward to its function pointer.
+ * Therefore the function pointer is of different type as in TaskHelper.
+ * @author Marc Vester (XaserLE)
+ */
 class TaskHelperWithData : public TaskHelper
 {
 	public:
@@ -23,10 +28,10 @@ class TaskHelperWithData : public TaskHelper
 		virtual void update(void) { _func(_data); }
 
 		/**
-		 * @brief Access to the function pointer of this task.
-		 * @return A pointer to the function of this task.
+		 * @brief Compares the function pointer of this task with the given one.
+		 * @param func The pointer to compare with the tasks one.
+		 * @return True if pointers are equal, false otherwise.
 		 */
-		//virtual func_ptr_with_data func(void) const { return _func; }
 		virtual bool funcEquals(func_ptr_with_data func) const { return func == _func; }
 
 	private:

@@ -9,6 +9,7 @@
  * @brief It provides functionality to turn LEDs on/off, measure temperature and brightness, get button states.
  * @author Marc Vester (XaserLE)
  * @author Jörn Hoffmann (jhoffmann)
+ * @author Lukas Fischer
  */
 class ParkingShield
 {

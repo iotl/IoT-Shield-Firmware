@@ -1,7 +1,6 @@
 #include <Scheduler.h>
 #include <TaskHelper.h>
 #include <TaskHelperWithData.h>
-#include <DeviceArduino.h>
 #include <new.h>
 
 //----------------------------------------------------------------------------------------------------
@@ -90,12 +89,12 @@ void Scheduler::scheduleTasks(void)
 // Private
 //----------------------------------------------------------------------------------------------------
 
-bool Scheduler::addTask(Task * task, unsigned long timer, bool reshot, bool isTaskHelper, bool taskHelperHasData)
+bool Scheduler::addTask(Task * task, unsigned long timer, bool reshot, bool isTaskHelper, bool isTaskHelperWithData)
 {
   for (unsigned char i = 0; i < MAX_TASKS; i++)
   {
     if (tasks[i].isFree())
-      return tasks[i].set(task, timer, reshot, isTaskHelper, taskHelperHasData);
+      return tasks[i].set(task, timer, reshot, isTaskHelper, isTaskHelperWithData);
   }
 
   return false;

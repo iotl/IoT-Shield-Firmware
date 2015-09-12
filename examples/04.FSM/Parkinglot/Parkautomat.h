@@ -9,7 +9,7 @@ class Countdown : public Task
   public:
     Countdown(ParkingShield & shield) : shield(shield) {}
     
-    void update(Scheduler & scheduler);
+    void update(void);
     
   private:
     ParkingShield & shield;

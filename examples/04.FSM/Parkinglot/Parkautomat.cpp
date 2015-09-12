@@ -2,7 +2,7 @@
 #include <Task.h>
 #include "Parkautomat.h"
 
-void Countdown::update(Scheduler & scheduler)
+void Countdown::update(void)
 {
     char number = shield.sevenSeg.number();
     
