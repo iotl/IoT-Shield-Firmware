@@ -1,4 +1,5 @@
-#include <Scheduler.h>
+#ifdef SCHEDULER_H
+
 #include <TaskHelper.h>
 #include <TaskHelperWithData.h>
 #include <new.h>
@@ -24,52 +25,22 @@ bool Scheduler::addTask(void (* func)(void *), void * data, unsigned long timer,
 	return addTask(task, timer, reshot, true, true);
 }
 
-bool Scheduler::taskExists(Task * task) const
+template<typename T>
+bool Scheduler::taskExists(T task) const
 {
   if (indexOf(task) >= 0)
-  	return true;
+    return true;
 
   return false;
 }
 
-bool Scheduler::taskExists(void (* func)(void)) const
-{
-  if (indexOf(func) >= 0)
-  	return true;
-
-  return false;
-}
-
-bool Scheduler::taskExists(void (* func)(void *)) const
-{
-  if (indexOf(func) >= 0)
-  	return true;
-
-  return false;
-}
-
-void Scheduler::removeTask(Task * task)
+template<typename T>
+void Scheduler::removeTask(T task)
 {
   char index = indexOf(task);
 
   if (index >= 0)
-    removeTask(index);
-}
-
-void Scheduler::removeTask(void (* func)(void))
-{
-  char index = indexOf(func);
-
-  if (index >= 0)
-  	removeTask(index);
-}
-
-void Scheduler::removeTask(void (* func)(void *))
-{
-  char index = indexOf(func);
-
-  if (index >= 0)
-  	removeTask(index);
+    removeTaskPerIndex(index);
 }
 
 void Scheduler::scheduleTasks(void)
@@ -100,12 +71,13 @@ bool Scheduler::addTask(Task * task, unsigned long timer, bool reshot, bool isTa
   return false;
 }
 
-void Scheduler::removeTask(unsigned long index)
+void Scheduler::removeTaskPerIndex(unsigned long index)
 {
 	tasks[index].remove();
 }
 
-char Scheduler::indexOf(Task * task) const
+template<typename T>
+char Scheduler::indexOf(T task) const
 {
   for (unsigned char i = 0; i < MAX_TASKS; i++)
   {
@@ -116,24 +88,4 @@ char Scheduler::indexOf(Task * task) const
   return -1;
 }
 
-char Scheduler::indexOf(void (* func)(void)) const
-{
-  for (unsigned char i = 0; i < MAX_TASKS; i++)
-  {
-    if (tasks[i].compare(func))
-      return i;
-  }
-
-  return -1;
-}
-
-char Scheduler::indexOf(void (* func)(void *)) const
-{
-  for (unsigned char i = 0; i < MAX_TASKS; i++)
-  {
-    if (tasks[i].compare(func))
-      return i;
-  }
-
-  return -1;
-}
+#endif // SCHEDULER_H

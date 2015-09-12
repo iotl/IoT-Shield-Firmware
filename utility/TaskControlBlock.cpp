@@ -96,7 +96,7 @@ bool TaskControlBlock::compare(void (*func_)(void)) const
 {
 	if (isUsed() && isTaskHelper())
 	{
-		TaskHelper * helper =  static_cast<TaskHelper *>(const_cast<Task *>(task()));
+		TaskHelper const * helper =  static_cast<TaskHelper const *>(task());
 		return helper->funcEquals(func_);
 	}
 
@@ -107,7 +107,7 @@ bool TaskControlBlock::compare(void (*func_)(void *)) const
 {
 	if (isUsed() && isTaskHelperWithData())
 	{
-		TaskHelperWithData * helper =  static_cast<TaskHelperWithData *>(const_cast<Task *>(task()));
+		TaskHelperWithData const * helper =  static_cast<TaskHelperWithData const *>(task());
 		return helper->funcEquals(func_);
 	}
 

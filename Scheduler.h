@@ -42,44 +42,20 @@ class Scheduler
 		 */
 		bool addTask(void (* func)(void *), void * data, unsigned long timer, bool reshot = true);
 
-	    /** 
+	    /**
 	     * @brief Tells us if a task was already added to the scheduler.
-	     * @param task Pointer to the task object that should be executed.
+	     * @param task Pointer to the task object that should be executed. Valid types: Task *, void (* func)(void), void (* func)(void *).
 	     * @return True if task is already in the scheduling list, false otherwise.
 	     */
-	    bool taskExists(Task * task) const;
-
-	    /** 
-	     * @brief Tells us if a task was already added to the scheduler.
-	     * @param func Pointer to the function that should be searched.
-	     * @return True if func is already in the scheduling list, false otherwise.
-	     */
-	    bool taskExists(void (* func)(void)) const;
-
-	    /** 
-	     * @brief Tells us if a task was already added to the scheduler.
-	     * @param func Pointer to the function that should be searched.
-	     * @return True if func is already in the scheduling list, false otherwise.
-	     */
-	    bool taskExists(void (* func)(void *)) const;
-		
-		/**
-		 * @brief Removes a task from the scheduler.
-		 * @param task Pointer to the task object that should be removed.
-		 */
-		void removeTask(Task * task);
+	    template<typename T>
+	    bool taskExists(T task) const;
 
 		/**
 		 * @brief Removes a task from the scheduler.
-		 * @param func Pointer to the function that should be removed.
+		 * @param task Pointer to the task object that should be removed. Valid types: Task *, void (* func)(void), void (* func)(void *).
 		 */
-		void removeTask(void (* func)(void));
-
-		/**
-		 * @brief Removes a task from the scheduler.
-		 * @param func Pointer to the function that should be removed.
-		 */
-		void removeTask(void (* func)(void *));
+		template<typename T>
+		void removeTask(T task);
 		
 		/**
 		 * @brief This is the main function to schedule all tasks. Should be called every frame in the main loop.
@@ -102,28 +78,15 @@ class Scheduler
 	     * @brief Internal function that removes a task given by an index (faster than searching for the function pointer).
 	     * @param index The index for the task. Valid values: [0 : MAX_TASKS-1].
 	     */
-	    void removeTask(unsigned long int index);
+	    void removeTaskPerIndex(unsigned long int index);
 
 	    /**
 	     * @brief Gives the index of a task if its in the scheduling list.
-	     * @param task Pointer to the task we want the index of.
+		 * @param task Pointer to the task object of which we want the index. Valid types: Task *, void (* func)(void), void (* func)(void *).
 	     * @return The index of the task in the scheduler list [0 : MAX_TASKS-1]. -1 if task is not present.
 	     */
-	    char indexOf(Task * task) const;
-
-	    /**
-	     * @brief Gives the index of a task if its in the scheduling list.
-	     * @param func Pointer to the function in the task we want the index of.
-	     * @return The index of the task in the scheduler list [0 : MAX_TASKS-1]. -1 if task is not present.
-	     */
-	    char indexOf(void (* func)(void)) const;
-
-	    /**
-	     * @brief Gives the index of a task if its in the scheduling list.
-	     * @param func Pointer to the function in the task we want the index of.
-	     * @return The index of the task in the scheduler list [0 : MAX_TASKS-1]. -1 if task is not present.
-	     */
-	    char indexOf(void (* func)(void *)) const;
+	    template<typename T>
+		char indexOf(T task) const;
 
 		// Maximum number of tasks.
 		static char const MAX_TASKS = 20;
@@ -131,4 +94,5 @@ class Scheduler
 		TaskControlBlock tasks[MAX_TASKS];
 };
 
+#include <utility/Scheduler.cpp>
 #endif //SCHEDULER_H
