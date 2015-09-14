@@ -114,30 +114,32 @@ void ParkingShield::setDebounceInterval(unsigned int interval)
     debounceInterval = interval;
 }
 
-bool ParkingShield::sampleButton(unsigned int button, button_lock_t &buttonLock)
-{    
-    if (Device::milliseconds() - buttonLock.timestamp >= debounceInterval)
-        buttonLock.locked = false;
-     
-    bool buttonPressed = Device::digitalReadPin(input_pins[button]) == Device::SIGNAL_HIGH; 
-    if (buttonPressed && !buttonLock.locked)
-    {
-        buttonLock.timestamp = Device::milliseconds();
-        buttonLock.locked = true;
-        return true;
-    }
+bool ParkingShield::sampleButton(unsigned int buttonNumber, button_state_t &button)
+{
+    if (Device::milliseconds() - button.lockTime >= debounceInterval)
+        button.locked = false;
 
-    return false;
+    if (!button.locked)
+    {
+        bool button_pressed_before = button.pressed;
+        button.pressed = Device::digitalReadPin(input_pins[buttonNumber]) == Device::SIGNAL_HIGH;
+        if (button_pressed_before != button.pressed)
+        {
+            button.locked = true;
+            button.lockTime = Device::milliseconds();
+        }
+    }
+    return button.pressed;
 }
 
 bool ParkingShield::buttonS1Pressed(void)
 {
-  return sampleButton(BUTTON_S1, buttonLocks[0]);
+  return sampleButton(BUTTON_S1, buttons[0]);
 }
 
 bool ParkingShield::buttonS2Pressed(void)
 {
-  return sampleButton(BUTTON_S2, buttonLocks[1]);
+  return sampleButton(BUTTON_S2, buttons[1]);
 }
 
 unsigned int ParkingShield::getTemperature(void) const

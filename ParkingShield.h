@@ -112,19 +112,20 @@ class ParkingShield
     private:
         // Defines
         typedef struct {
-          bool locked;
-          unsigned long timestamp;
-        } button_lock_t;
+            bool pressed;
+            bool locked;
+            unsigned long lockTime;
+        } button_state_t;
 
         // Variables
-        button_lock_t buttonLocks[2];        
+        button_state_t buttons[2];
         unsigned int debounceInterval = 250;
         static const int BRIGHTNESS_ARRAY_SIZE = 8;
         int brightnessValuesPointer = 0;
         int brightnessValues[BRIGHTNESS_ARRAY_SIZE] = {0};
         
         // Methods
-        bool sampleButton(unsigned int button, button_lock_t &buttonLock);
+        bool sampleButton(unsigned int buttonNumber, button_state_t &button);
 };
 
 #endif
