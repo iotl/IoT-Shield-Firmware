@@ -1,25 +1,9 @@
 #include <ParkingShield.h>
-//#include <DeviceEmulator.h>
 #include <DeviceArduino.h>
-#include <Scheduler.h>
 
 // ---------------------------------------------------------------------------------------------------- //
 // Helper
 // ---------------------------------------------------------------------------------------------------- //
-/*
-typedef union{
-    struct {
-        unsigned int red,
-        unsigned int yellow,
-        unsigned int green,
-    };
-
-    unsigned int leds[LED_MAX];
-} led_translation;
-
-static led_translation leds = {.red=a4, .yellow=a5, .green=4};
-*/
-
 typedef enum
 {
     BUTTON_S1,
@@ -130,38 +114,32 @@ void ParkingShield::setDebounceInterval(unsigned int interval)
     debounceInterval = interval;
 }
 
-bool ParkingShield::buttonS1Pressed(void) const
+bool ParkingShield::sampleButton(unsigned int buttonNumber, button_state_t &button)
 {
-    static unsigned long timestamp = 0;
-    static bool buttonLocked = false;
+    if (Device::milliseconds() - button.lockTime >= debounceInterval)
+        button.locked = false;
 
-    if (Device::milliseconds() - timestamp >= debounceInterval)
-        buttonLocked = false;
-
-    if (Device::digitalReadPin(input_pins[BUTTON_S1]) == Device::SIGNAL_HIGH && !buttonLocked)
+    if (!button.locked)
     {
-        timestamp = Device::milliseconds();
-        buttonLocked = true;
-        return true;
+        bool button_pressed_before = button.pressed;
+        button.pressed = Device::digitalReadPin(input_pins[buttonNumber]) == Device::SIGNAL_HIGH;
+        if (button_pressed_before != button.pressed)
+        {
+            button.locked = true;
+            button.lockTime = Device::milliseconds();
+        }
     }
-    return false;
+    return button.pressed;
 }
 
-bool ParkingShield::buttonS2Pressed(void) const
+bool ParkingShield::buttonS1Pressed(void)
 {
-    static unsigned long timestamp = 0;
-    static bool buttonLocked = false;
+  return sampleButton(BUTTON_S1, buttons[0]);
+}
 
-    if (Device::milliseconds() - timestamp >= debounceInterval)
-        buttonLocked = false;
-
-    if (Device::digitalReadPin(input_pins[BUTTON_S2]) == Device::SIGNAL_HIGH && !buttonLocked)
-    {
-        timestamp = Device::milliseconds();
-        buttonLocked = true;
-        return true;
-    }
-    return false;
+bool ParkingShield::buttonS2Pressed(void)
+{
+  return sampleButton(BUTTON_S2, buttons[1]);
 }
 
 unsigned int ParkingShield::getTemperature(void) const
@@ -186,6 +164,7 @@ unsigned int ParkingShield::getAverageBrightness(void)
     {
         average += brightnessValues[i];
     }
+
     return average / BRIGHTNESS_ARRAY_SIZE;
 }
 

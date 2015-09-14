@@ -9,6 +9,7 @@
  * @brief It provides functionality to turn LEDs on/off, measure temperature and brightness, get button states.
  * @author Marc Vester (XaserLE)
  * @author Jörn Hoffmann (jhoffmann)
+ * @author Lukas Fischer
  */
 class ParkingShield
 {
@@ -54,13 +55,13 @@ class ParkingShield
          * @brief Returns whether button S1 is pressed or not.
          * @return True if pressed, false otherwise.
          */
-        bool buttonS1Pressed(void) const;
+        bool buttonS1Pressed(void);
 
         /**
          * @brief Returns whether button S2 is pressed or not.
          * @return True if pressed, false otherwise.
          */
-        bool buttonS2Pressed(void) const;
+        bool buttonS2Pressed(void);
 
         /**
          * @brief Use this to make sound with the buzzer.
@@ -109,10 +110,22 @@ class ParkingShield
         SevenSeg sevenSeg;
 
     private:
-        int debounceInterval = 250;
+        // Defines
+        typedef struct {
+            bool pressed;
+            bool locked;
+            unsigned long lockTime;
+        } button_state_t;
+
+        // Variables
+        button_state_t buttons[2];
+        unsigned int debounceInterval = 250;
         static const int BRIGHTNESS_ARRAY_SIZE = 8;
         int brightnessValuesPointer = 0;
         int brightnessValues[BRIGHTNESS_ARRAY_SIZE] = {0};
+        
+        // Methods
+        bool sampleButton(unsigned int buttonNumber, button_state_t &button);
 };
 
 #endif
