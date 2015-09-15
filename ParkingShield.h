@@ -102,7 +102,7 @@ class ParkingShield
         void playMarch(bool shortVersion = true) const;
 
         /**
-         *@brief Set debounce interval
+         *@brief Set debounce interval in milliseconds
          */
         void setDebounceInterval(unsigned int interval);
 
@@ -119,7 +119,7 @@ class ParkingShield
 
         // Variables
         button_state_t buttons[2];
-        unsigned int debounceInterval = 250;
+        unsigned int debounceInterval = 100;
         static const int BRIGHTNESS_ARRAY_SIZE = 8;
         int brightnessValuesPointer = 0;
         int brightnessValues[BRIGHTNESS_ARRAY_SIZE] = {0};
