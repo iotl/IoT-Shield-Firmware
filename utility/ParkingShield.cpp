@@ -114,6 +114,11 @@ void ParkingShield::setDebounceInterval(unsigned int interval)
     debounceInterval = interval;
 }
 
+void ParkingShield::setRepeatInterval(unsigned int interval)
+{
+    repeatInterval = interval;
+}
+
 bool ParkingShield::sampleButton(unsigned int buttonNumber, button_state_t &button)
 {
     unsigned long time = Device::milliseconds();
@@ -130,7 +135,13 @@ bool ParkingShield::sampleButton(unsigned int buttonNumber, button_state_t &butt
             button.lockTime = time;
         }
     }
-    return button.pressed;
+
+    if (button.pressed && time - button.repeatTime >= repeatInterval)
+    {
+        button.repeatTime = time;
+        return true;
+    }
+    return false;
 }
 
 bool ParkingShield::buttonS1Pressed(void)
