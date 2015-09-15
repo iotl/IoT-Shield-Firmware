@@ -116,7 +116,8 @@ void ParkingShield::setDebounceInterval(unsigned int interval)
 
 bool ParkingShield::sampleButton(unsigned int buttonNumber, button_state_t &button)
 {
-    if (Device::milliseconds() - button.lockTime >= debounceInterval)
+    unsigned long time = Device::milliseconds();
+    if (time - button.lockTime >= debounceInterval)
         button.locked = false;
 
     if (!button.locked)
@@ -126,7 +127,7 @@ bool ParkingShield::sampleButton(unsigned int buttonNumber, button_state_t &butt
         if (button_pressed_before != button.pressed)
         {
             button.locked = true;
-            button.lockTime = Device::milliseconds();
+            button.lockTime = time;
         }
     }
     return button.pressed;
