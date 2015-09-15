@@ -40,7 +40,7 @@ ParkingShield shield;
 
 void setup()
 {
-    shield.setRepeatInterval = 250;
+    shield.setRepeatInterval(250);
 }
 
 void loop()
