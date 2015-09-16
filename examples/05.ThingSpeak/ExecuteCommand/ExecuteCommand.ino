@@ -1,4 +1,4 @@
-#include <SoftwareSerial.h>
+<#include <SoftwareSerial.h>
 #include <Esp8266.h>
 #include <IPDParser.h>
 #include <HttpRequest.h>
@@ -26,7 +26,7 @@ void setup()
   // is not yet in API. We have to set it by an AT command.
   espSerial.print(F("AT+CWMODE=1\r\n"));
 
-  esp.joinAccessPoint("IEKnet", "wlanIEKnet19");
+  esp.joinAccessPoint("ti_iot", "ti_iot42!");
   esp.setMultipleConnections(true);
 }
 
