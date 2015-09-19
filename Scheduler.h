@@ -94,5 +94,4 @@ class Scheduler
 		TaskControlBlock tasks[MAX_TASKS];
 };
 
-#include <utility/Scheduler.cpp>
 #endif //SCHEDULER_H
