@@ -39,7 +39,9 @@ state_t state = STOP;
 ParkingShield shield;
 
 void setup()
-{ }
+{
+    shield.setRepeatInterval(250);
+}
 
 void loop()
 {

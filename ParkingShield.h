@@ -1,5 +1,5 @@
 #ifndef PARKINGSHIELD_H
-#define PARKINGSHIELD_H
+    #define PARKINGSHIELD_H
 
 #include <SevenSeg.h>
 #include <stdint.h>
@@ -102,9 +102,15 @@ class ParkingShield
         void playMarch(bool shortVersion = true) const;
 
         /**
-         *@brief Set debounce interval
+         *@brief Set debounce interval in milliseconds
          */
         void setDebounceInterval(unsigned int interval);
+
+        /**
+         *@brief Set repeat interval in milliseconds.
+         *@brief After buttonPressed() returns true it will block the button for some milliseconds returning false even if the button is still pressed.
+         */
+        void setRepeatInterval(unsigned int interval);
 
         /// The seven segment display, accessable from outside.
         SevenSeg sevenSeg;
@@ -115,11 +121,13 @@ class ParkingShield
             bool pressed;
             bool locked;
             unsigned long lockTime;
+            unsigned long repeatTime;
         } button_state_t;
 
         // Variables
         button_state_t buttons[2];
-        unsigned int debounceInterval = 250;
+        unsigned int debounceInterval = 100;
+        unsigned int repeatInterval = 0;
         static const int BRIGHTNESS_ARRAY_SIZE = 8;
         int brightnessValuesPointer = 0;
         int brightnessValues[BRIGHTNESS_ARRAY_SIZE] = {0};

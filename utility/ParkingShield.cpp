@@ -114,9 +114,15 @@ void ParkingShield::setDebounceInterval(unsigned int interval)
     debounceInterval = interval;
 }
 
+void ParkingShield::setRepeatInterval(unsigned int interval)
+{
+    repeatInterval = interval;
+}
+
 bool ParkingShield::sampleButton(unsigned int buttonNumber, button_state_t &button)
 {
-    if (Device::milliseconds() - button.lockTime >= debounceInterval)
+    unsigned long time = Device::milliseconds();
+    if (time - button.lockTime >= debounceInterval)
         button.locked = false;
 
     if (!button.locked)
@@ -126,10 +132,16 @@ bool ParkingShield::sampleButton(unsigned int buttonNumber, button_state_t &butt
         if (button_pressed_before != button.pressed)
         {
             button.locked = true;
-            button.lockTime = Device::milliseconds();
+            button.lockTime = time;
         }
     }
-    return button.pressed;
+
+    if (button.pressed && time - button.repeatTime >= repeatInterval)
+    {
+        button.repeatTime = time;
+        return true;
+    }
+    return false;
 }
 
 bool ParkingShield::buttonS1Pressed(void)
@@ -160,9 +172,8 @@ unsigned int ParkingShield::getAverageBrightness(void)
     brightnessValuesPointer %= BRIGHTNESS_ARRAY_SIZE;
     int average = 0;
     int i;
-    
-    
-    for( i = 0; i < BRIGHTNESS_ARRAY_SIZE; ++i) {
+    for( i = 0; i < BRIGHTNESS_ARRAY_SIZE; ++i)
+    {
         average += brightnessValues[i];
     }
 

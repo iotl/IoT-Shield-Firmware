@@ -2,7 +2,6 @@
   #define OUTPUT_H
 
 #include <Task.h>
-#include <Scheduler.h>
 #include <ParkingShield.h>
 #include <Arduino.h>
 
@@ -11,7 +10,7 @@ class Output : public Task
   public:
     Output(ParkingShield & shield) : _shield(shield) {}
     virtual ~Output() {}
-    
+
     virtual void update(void)
     {
       Serial.print("Button S1: ");
@@ -24,7 +23,7 @@ class Output : public Task
       Serial.print(_shield.getTemperature());
       Serial.println(" Grad Celsius");
     }
-    
+
   private:
     ParkingShield & _shield;
 };

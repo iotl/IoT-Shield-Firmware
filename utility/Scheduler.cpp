@@ -10,19 +10,19 @@
 
 bool Scheduler::addTask(Task * task, unsigned long int timer, bool reshot)
 {
-	return addTask(task, timer, reshot, false, false);
+  return addTask(task, timer, reshot, false, false);
 }
 
 bool Scheduler::addTask(void (* func)(void), unsigned long timer, bool reshot)
 {
-	Task * task = new TaskHelper(func);
-	return addTask(task, timer, reshot, true, false);
+  Task * task = new TaskHelper(func);
+  return addTask(task, timer, reshot, true, false);
 }
 
 bool Scheduler::addTask(void (* func)(void *), void * data, unsigned long timer, bool reshot)
 {
-	Task * task = new TaskHelperWithData(func, data);
-	return addTask(task, timer, reshot, false, true);
+  Task * task = new TaskHelperWithData(func, data);
+  return addTask(task, timer, reshot, false, true);
 }
 
 template<typename T>
@@ -45,14 +45,14 @@ void Scheduler::removeTask(T task)
 
 void Scheduler::scheduleTasks(void)
 {
-	for (unsigned char i = 0; i < MAX_TASKS; i++)
-	{
-		if (tasks[i].isUsed())
-		{
-			if (tasks[i].ready())
-				tasks[i].run();
-		}
-	}
+  for (unsigned char i = 0; i < MAX_TASKS; i++)
+  {
+    if (tasks[i].isUsed())
+    {
+      if (tasks[i].ready())
+        tasks[i].run();
+    }
+  }
 }
 
 
@@ -73,7 +73,7 @@ bool Scheduler::addTask(Task * task, unsigned long timer, bool reshot, bool isTa
 
 void Scheduler::removeTaskPerIndex(unsigned long index)
 {
-	tasks[index].remove();
+  tasks[index].remove();
 }
 
 template<typename T>

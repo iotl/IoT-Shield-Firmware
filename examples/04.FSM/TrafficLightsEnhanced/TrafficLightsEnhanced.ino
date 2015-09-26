@@ -40,7 +40,9 @@ state_t state = DISABLE;
 ParkingShield shield;
 
 void setup()
-{ }
+{
+    shield.setRepeatInterval(250);
+}
 
 void loop()
 {

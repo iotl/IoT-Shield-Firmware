@@ -8,6 +8,7 @@ Parkautomat parkautomat(shield, scheduler);
 
 void setup(void)
 {
+    shield.setRepeatInterval(250);
 }
 
 void loop(void)

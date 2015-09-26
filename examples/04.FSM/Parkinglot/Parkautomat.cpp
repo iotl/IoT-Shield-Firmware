@@ -1,11 +1,10 @@
 #include <ParkingShield.h>
-#include <Task.h>
 #include "Parkautomat.h"
 
 void Countdown::update(void)
 {
     char number = shield.sevenSeg.number();
-    
+
     if (number < 1)
         return;
 
@@ -86,7 +85,7 @@ void Parkautomat::updateStateUnpayed()
         _shield.sevenSeg.showNumber( 1 + TIMEOUT_WARNING_THRESHOLD);
         _scheduler.addTask(&countdown, 2000);
     }
-    
+
     if( !shieldIsOccupied() )
     {
         enterStateOff();
@@ -104,12 +103,12 @@ void Parkautomat::updateStatePayed()
 {
     if( _shield.buttonS1Pressed() )
         _shield.sevenSeg++;
-        
+
     if( TIMEOUT_WARNING_THRESHOLD == _shield.sevenSeg.number() )
     {
         enterStatePayedTimeoutWarning();
     }
-    
+
     if( !shieldIsOccupied() )
     {
         _shield.sevenSeg.clear();
@@ -130,21 +129,19 @@ void Parkautomat::updateStatePayedTimeoutWarning()
     {
         _shield.sevenSeg++;
     }
-    
+
     if( TIMEOUT_WARNING_THRESHOLD < _shield.sevenSeg.number() )
     {
         enterStatePayed();
     }
-    
+
     if( counterIsTimedOut() )
     {
         enterStateUnpayed();
     }
-    
+
     if( !shieldIsOccupied() )
     {
         enterStateOff();
     }
 }
-
-

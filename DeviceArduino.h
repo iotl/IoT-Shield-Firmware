@@ -3,14 +3,6 @@
 
 #include <stdint.h>
 
-/**
- * @brief The Device class abstracts hardware specific stuff from the Arduino.
- * @brief This was a proof of concept and there are missing some things like Serial.xxx.
- * @brief All classes that belong to the ParkingShield are using this abstraction layer.
- * @brief Therefore it is possible to separate the ParkingShield and use a completely
- * @brief different device (or an emulator).
- * @author Marc Vester (XaserLE)
- */
 class Device
 {
   	public:
