@@ -9,8 +9,8 @@ class TestTask : public Task
   public:
     TestTask(void) {}
     virtual ~TestTask() {}
-    
-    virtual void update(Scheduler & scheduler) { Serial.println("TestTask executed."); }
+
+    virtual void update(void) { Serial.println("TestTask executed."); }
 };
 
 #endif TESTTASK_H

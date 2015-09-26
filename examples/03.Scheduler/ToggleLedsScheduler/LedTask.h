@@ -1,4 +1,4 @@
-#include <Scheduler.h>
+#include <Task.h>
 #include <ParkingShield.h>
 
 class LedTask : public Task
@@ -6,8 +6,8 @@ class LedTask : public Task
   public:
   LedTask(ParkingShield::led_t led, ParkingShield &shield) : _led(led), _shield(shield)
   {}
-  
-  void update(Scheduler &sched)
+
+  void update(void)
   {
     _shield.setLed(_led, _enable);
     _enable = !_enable;

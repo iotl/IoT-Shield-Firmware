@@ -8,9 +8,9 @@ class Countdown : public Task
 {
   public:
     Countdown(ParkingShield & shield) : shield(shield) {}
-    
-    void update(Scheduler & scheduler);
-    
+
+    void update(void);
+
   private:
     ParkingShield & shield;
 };
@@ -20,7 +20,7 @@ class Parkautomat
   public:
       Parkautomat(ParkingShield &shield, Scheduler & scheduler) : countdown(shield), _shield(shield), _scheduler(scheduler), state(OFF) {}
       void update(void);
-      
+
   private:
       void ledsOff();
       bool shieldIsOccupied();
@@ -33,7 +33,7 @@ class Parkautomat
       void updateStateUnpayed();
       void updateStatePayed();
       void updateStatePayedTimeoutWarning();
-  
+
       typedef enum
       {
           OFF,
