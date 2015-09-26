@@ -1,5 +1,4 @@
-#ifdef SCHEDULER_H
-
+#include "Scheduler.h"
 #include <TaskHelper.h>
 #include <TaskHelperWithData.h>
 #include <new.h>
@@ -23,24 +22,6 @@ bool Scheduler::addTask(void (* func)(void *), void * data, unsigned long timer,
 {
   Task * task = new TaskHelperWithData(func, data);
   return addTask(task, timer, reshot, false, true);
-}
-
-template<typename T>
-bool Scheduler::taskExists(T task) const
-{
-  if (indexOf(task) >= 0)
-    return true;
-
-  return false;
-}
-
-template<typename T>
-void Scheduler::removeTask(T task)
-{
-  char index = indexOf(task);
-
-  if (index >= 0)
-    removeTaskPerIndex(index);
 }
 
 void Scheduler::scheduleTasks(void)
@@ -75,17 +56,3 @@ void Scheduler::removeTaskPerIndex(unsigned long index)
 {
   tasks[index].remove();
 }
-
-template<typename T>
-char Scheduler::indexOf(T task) const
-{
-  for (unsigned char i = 0; i < MAX_TASKS; i++)
-  {
-    if (tasks[i].compare(task))
-      return i;
-  }
-
-  return -1;
-}
-
-#endif // SCHEDULER_H
