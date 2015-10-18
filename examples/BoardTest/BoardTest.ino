@@ -13,6 +13,7 @@ void setup(void)
     scheduler.addTask(&output, 1000);
     shield.playMarch();
     shield.playMelody();
+    shield.setRepeatInterval(250);
 }
 
 void loop(void)
