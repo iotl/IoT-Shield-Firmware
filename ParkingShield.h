@@ -3,6 +3,7 @@
 
 #include <SevenSeg.h>
 #include <stdint.h>
+#include <DeviceArduino.h>
 
 /**
  * @brief The ParkingShield class is designed for the ParkingShield platform, an arduino extension board from J�rn Hoffmann at the University of Leipzig.
@@ -102,11 +103,6 @@ class ParkingShield
         void playMarch(bool shortVersion = true) const;
 
         /**
-         *@brief Set debounce interval in milliseconds
-         */
-        void setDebounceInterval(unsigned int interval);
-
-        /**
          *@brief Set repeat interval in milliseconds.
          *@brief After buttonPressed() returns true it will block the button for some milliseconds returning false even if the button is still pressed.
          */
@@ -117,23 +113,22 @@ class ParkingShield
 
     private:
         // Defines
-        typedef struct {
-            bool pressed;
-            bool locked;
-            unsigned long lockTime;
+        class Button {
+        public:
+            Button(Device::pin_t button_pin);
+            bool sampleButton();
+            unsigned int repeatInterval;
+        private:
             unsigned long repeatTime;
-        } button_state_t;
+            Device::pin_t pinNumber;
+        };
 
         // Variables
-        button_state_t buttons[2];
-        unsigned int debounceInterval = 100;
-        unsigned int repeatInterval = 0;
+        Button buttonS1;
+        Button buttonS2;
         static const int BRIGHTNESS_ARRAY_SIZE = 8;
         int brightnessValuesPointer = 0;
         int brightnessValues[BRIGHTNESS_ARRAY_SIZE] = {0};
-        
-        // Methods
-        bool sampleButton(unsigned int buttonNumber, button_state_t &button);
 };
 
 #endif

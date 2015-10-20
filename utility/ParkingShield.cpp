@@ -1,13 +1,10 @@
 #include <ParkingShield.h>
-#include <DeviceArduino.h>
 
 // ---------------------------------------------------------------------------------------------------- //
 // Helper
 // ---------------------------------------------------------------------------------------------------- //
 typedef enum
 {
-    BUTTON_S1,
-    BUTTON_S2,
     BRIGHTNESS,
     TEMPERATURE,
     INPUT_MAX
@@ -23,7 +20,7 @@ typedef enum
 } output_t;
 
 Device::pin_t const output_pins[OUTPUT_MAX] = {Device::DIGITAL_PIN_4, Device::ANALOG_PIN_5, Device::ANALOG_PIN_4, Device::DIGITAL_PIN_5};
-Device::pin_t const input_pins[INPUT_MAX] = {Device::ANALOG_PIN_0, Device::ANALOG_PIN_1, Device::ANALOG_PIN_2, Device::ANALOG_PIN_3};
+Device::pin_t const input_pins[INPUT_MAX] = {Device::ANALOG_PIN_2, Device::ANALOG_PIN_3};
 Device::pin_t const sevensegment_pins[8] = {Device::DIGITAL_PIN_7,Device::DIGITAL_PIN_8,Device::DIGITAL_PIN_9,Device::DIGITAL_PIN_10,Device::DIGITAL_PIN_11,Device::DIGITAL_PIN_12,Device::DIGITAL_PIN_13,Device::DIGITAL_PIN_6};
 
 bool isInputPinValid(input_t inputPin)
@@ -98,26 +95,20 @@ void setAllLeds(bool enable)
         ParkingShield::setLed(static_cast<ParkingShield::led_t>(led), enable);
 }
 
-bool ParkingShield::sampleButton(unsigned int buttonNumber, button_state_t &button)
+ParkingShield::Button::Button(Device::pin_t button_pin) : pinNumber(button_pin), repeatInterval(0)
+{
+    setPinMode(button_pin, Device::PINMODE_INPUT);
+}
+
+bool ParkingShield::Button::sampleButton()
 {
     unsigned long time = Device::milliseconds();
-    if (time - button.lockTime >= debounceInterval)
-        button.locked = false;
 
-    if (!button.locked)
-    {
-        bool button_pressed_before = button.pressed;
-        button.pressed = Device::digitalReadPin(input_pins[buttonNumber]) == Device::SIGNAL_HIGH;
-        if (button_pressed_before != button.pressed)
-        {
-            button.locked = true;
-            button.lockTime = time;
-        }
-    }
+    bool button_pressed = Device::digitalReadPin(pinNumber) == Device::SIGNAL_HIGH;
 
-    if (button.pressed && time - button.repeatTime >= repeatInterval)
+    if (button_pressed && time - repeatTime >= repeatInterval)
     {
-        button.repeatTime = time;
+        repeatTime = time;
         return true;
     }
     return false;
@@ -126,7 +117,8 @@ bool ParkingShield::sampleButton(unsigned int buttonNumber, button_state_t &butt
 // ---------------------------------------------------------------------------------------------------- //
 // Public
 // ---------------------------------------------------------------------------------------------------- //
-ParkingShield::ParkingShield(void) : sevenSeg(sevensegment_pins)
+ParkingShield::ParkingShield(void) : sevenSeg(sevensegment_pins),
+            buttonS1(Device::ANALOG_PIN_0), buttonS2(Device::ANALOG_PIN_1)
 {
     setupOutput();
     setupInput();
@@ -134,24 +126,20 @@ ParkingShield::ParkingShield(void) : sevenSeg(sevensegment_pins)
     setAllLeds(false);
 }
 
-void ParkingShield::setDebounceInterval(unsigned int interval)
-{
-    debounceInterval = interval;
-}
-
 void ParkingShield::setRepeatInterval(unsigned int interval)
 {
-    repeatInterval = interval;
+    buttonS1.repeatInterval = interval;
+    buttonS2.repeatInterval = interval;
 }
 
 bool ParkingShield::buttonS1Pressed(void)
 {
-  return sampleButton(BUTTON_S1, buttons[0]);
+  return buttonS1.sampleButton();
 }
 
 bool ParkingShield::buttonS2Pressed(void)
 {
-  return sampleButton(BUTTON_S2, buttons[1]);
+  return buttonS2.sampleButton();
 }
 
 unsigned int ParkingShield::getTemperature(void) const
