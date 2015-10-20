@@ -98,27 +98,6 @@ void setAllLeds(bool enable)
         ParkingShield::setLed(static_cast<ParkingShield::led_t>(led), enable);
 }
 
-// ---------------------------------------------------------------------------------------------------- //
-// Public
-// ---------------------------------------------------------------------------------------------------- //
-ParkingShield::ParkingShield(void) : sevenSeg(sevensegment_pins)
-{
-    setupOutput();
-    setupInput();
-
-    setAllLeds(false);
-}
-
-void ParkingShield::setDebounceInterval(unsigned int interval)
-{
-    debounceInterval = interval;
-}
-
-void ParkingShield::setRepeatInterval(unsigned int interval)
-{
-    repeatInterval = interval;
-}
-
 bool ParkingShield::sampleButton(unsigned int buttonNumber, button_state_t &button)
 {
     unsigned long time = Device::milliseconds();
@@ -142,6 +121,27 @@ bool ParkingShield::sampleButton(unsigned int buttonNumber, button_state_t &butt
         return true;
     }
     return false;
+}
+
+// ---------------------------------------------------------------------------------------------------- //
+// Public
+// ---------------------------------------------------------------------------------------------------- //
+ParkingShield::ParkingShield(void) : sevenSeg(sevensegment_pins)
+{
+    setupOutput();
+    setupInput();
+
+    setAllLeds(false);
+}
+
+void ParkingShield::setDebounceInterval(unsigned int interval)
+{
+    debounceInterval = interval;
+}
+
+void ParkingShield::setRepeatInterval(unsigned int interval)
+{
+    repeatInterval = interval;
 }
 
 bool ParkingShield::buttonS1Pressed(void)
