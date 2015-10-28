@@ -141,14 +141,14 @@ char SevenSeg::number(void) const
     return isNumberValid(_symbol) ? _symbol : -1;
 }
 
-SevenSeg & SevenSeg::operator++(int)
+SevenSeg & SevenSeg::operator++(void)
 {
     if (isNumberValid(_symbol))
         showNumber(number() + 1);
     return *this;
 }
 
-SevenSeg & SevenSeg::operator--(int)
+SevenSeg & SevenSeg::operator--(void)
 {
     if (isNumberValid(_symbol))
         showNumber(number() - 1);

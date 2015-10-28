@@ -147,14 +147,14 @@ class SevenSeg
          * @param right The object to increment.
          * @return
          */
-        SevenSeg & operator++(int);
+        SevenSeg & operator++(void);
 
         /**
          * @brief Postfix, decrements the number on the seven segment display. If no number is shown, nothing will happen.
          * @param right The object to increment.
          * @return
          */
-        SevenSeg & operator--(int);
+        SevenSeg & operator--(void);
 
     private:
         /**
