@@ -10,18 +10,36 @@ Device::signal_t segmentstateMap[SevenSeg::NUMBER_SEGMENTSTATES] = { Device::SIG
 
 static bool const symbolMap[SevenSeg::NUMBER_SYMBOLS][SevenSeg::NUMBER_SEGMENTS] =
 {
-	{ true, true, true, true, true, true, false },		// 0
-	{ false, true, true, false, false, false, false },	// 1
-	{ true, true, false, true, true, false, true },		// 2
-	{ true, true, true, true, false, false, true },		// 3
-	{ false, true, true, false, false, true, true },	// 4
-	{ true, false, true, true, false, true, true },		// 5
-	{ true, false, true, true, true, true, true },		// 6
-	{ true, true, true, false, false, false, false },	// 7
-	{ true, true, true, true, true, true, true },		// 8
-	{ true, true, true, true, false, true, true },		// 9
-	{ false, false, false, false, false, false, true },	// -
-	{ false, false, false, false, false, false, false }	// nothing
+    { true, true, true, true, true, true, false },		// 0
+    { false, true, true, false, false, false, false },	// 1
+    { true, true, false, true, true, false, true },		// 2
+    { true, true, true, true, false, false, true },		// 3
+    { false, true, true, false, false, true, true },	// 4
+    { true, false, true, true, false, true, true },		// 5
+    { true, false, true, true, true, true, true },		// 6
+    { true, true, true, false, false, false, false },	// 7
+    { true, true, true, true, true, true, true },		// 8
+    { true, true, true, true, false, true, true },		// 9
+    { true, true, true, false, true, true, true },		// A
+    { false, false, true, true, true, true, true },		// b
+    { true, false, false, true, true, true, false },	// C
+    { false, false, false, true, true, false, true },	// c
+    { false, true, true, true, true, false, true },		// d
+    { true, false, false, true, true, true, true },		// E
+    { true, false, false, false, true, true, true },	// F
+    { false, true, true, false, true, true, true },		// H
+    { false, false, true, false, true, true, true },	// h
+    { false, false, false, false, true, true, false },	// I
+    { false, false, false, true, true, true, false },	// L
+    { true, true, true, true, true, true, false },		// O
+    { false, false, true, true, true, false, true },	// o
+    { true, true, false, false, true, true, true },		// P
+    { true, false, true, true, false, true, true },		// S
+    { false, true, true, true, true, true, false },		// U
+    { false, false, true, true, true, false, false },	// u
+    { false, true, true, true, false, true, true },		// Y
+    { false, false, false, false, false, false, true },	// -
+    { false, false, false, false, false, false, false }	// nothing
 };
 
 // -------------------------------------------------------------------------- //
@@ -29,38 +47,38 @@ static bool const symbolMap[SevenSeg::NUMBER_SYMBOLS][SevenSeg::NUMBER_SEGMENTS]
 // -------------------------------------------------------------------------- //
 void SevenSeg::setupPins(Device::pin_t const segmentPins[])
 {
-	for (uint8_t i = 0; i < NUMBER_SEGMENTS; i++)
-	{
-		segmentMap[i] = segmentPins[i];
-		Device::setPinMode(segmentMap[i], Device::PINMODE_OUTPUT);
-	}
+    for (uint8_t i = 0; i < NUMBER_SEGMENTS; i++)
+    {
+        segmentMap[i] = segmentPins[i];
+        Device::setPinMode(segmentMap[i], Device::PINMODE_OUTPUT);
+    }
 
-	if (_hasDecimalPoint)
-	{
-		decimalPointPin = segmentPins[NUMBER_SEGMENTS];
-		Device::setPinMode(decimalPointPin, Device::PINMODE_OUTPUT);
-	}
+    if (_hasDecimalPoint)
+    {
+        decimalPointPin = segmentPins[NUMBER_SEGMENTS];
+        Device::setPinMode(decimalPointPin, Device::PINMODE_OUTPUT);
+    }
 }
 
 void SevenSeg::setupSignals(connector_t connector) const
 {
-	switch (connector)
-	{
-		case CONNECTOR_COMMONANODE:
-			segmentstateMap[SEGMENTSTATE_ON] = Device::SIGNAL_LOW;
-			segmentstateMap[SEGMENTSTATE_OFF] = Device:: SIGNAL_HIGH;
-			break;
+    switch (connector)
+    {
+        case CONNECTOR_COMMONANODE:
+            segmentstateMap[SEGMENTSTATE_ON] = Device::SIGNAL_LOW;
+            segmentstateMap[SEGMENTSTATE_OFF] = Device:: SIGNAL_HIGH;
+            break;
 
-		case CONNECTOR_COMMONCATHODE:
-			segmentstateMap[SEGMENTSTATE_ON] = Device::SIGNAL_HIGH;
-			segmentstateMap[SEGMENTSTATE_OFF] = Device:: SIGNAL_LOW;
-			break;
+        case CONNECTOR_COMMONCATHODE:
+            segmentstateMap[SEGMENTSTATE_ON] = Device::SIGNAL_HIGH;
+            segmentstateMap[SEGMENTSTATE_OFF] = Device:: SIGNAL_LOW;
+            break;
 
-		default:
-			segmentstateMap[SEGMENTSTATE_ON] = Device::SIGNAL_LOW;
-			segmentstateMap[SEGMENTSTATE_OFF] = Device:: SIGNAL_HIGH;
-			break;
-	}
+        default:
+            segmentstateMap[SEGMENTSTATE_ON] = Device::SIGNAL_LOW;
+            segmentstateMap[SEGMENTSTATE_OFF] = Device:: SIGNAL_HIGH;
+            break;
+    }
 }
 
 // -------------------------------------------------------------------------- //
@@ -68,71 +86,71 @@ void SevenSeg::setupSignals(connector_t connector) const
 // -------------------------------------------------------------------------- //
 
 SevenSeg::SevenSeg(Device::pin_t const segmentPins[], bool hasDecimalPoint, connector_t connector)
-	:	_hasDecimalPoint(hasDecimalPoint)
+    :	_hasDecimalPoint(hasDecimalPoint)
 {
-	setupPins(segmentPins);
-	setupSignals(connector);
+    setupPins(segmentPins);
+    setupSignals(connector);
 
-	clear();
+    clear();
 }
 
 void SevenSeg::showNumber(uint8_t number)
 {
-	if (!isNumberValid(number))
-		return;
+    if (!isNumberValid(number))
+        return;
 
-	symbol_t symbol =  static_cast<symbol_t>(number);
-	showSymbol(symbol);
+    symbol_t symbol =  static_cast<symbol_t>(number);
+    showSymbol(symbol);
 }
 
 void SevenSeg::showSymbol(symbol_t symbol)
 {
-	_symbol = symbol;
-	for(int i = 0; i < NUMBER_SEGMENTS; i++)
-		showSegment(static_cast<segment_t>(i), symbolMap[symbol][i]);
+    _symbol = symbol;
+    for(int i = 0; i < NUMBER_SEGMENTS; i++)
+        showSegment(static_cast<segment_t>(i), symbolMap[symbol][i]);
 }
 
 void SevenSeg::showSegment(segment_t segment, bool enable) const
 {
-	Device::digitalWritePin(segmentMap[segment], enable ? segmentstateMap[SEGMENTSTATE_ON] : segmentstateMap[SEGMENTSTATE_OFF]);
+    Device::digitalWritePin(segmentMap[segment], enable ? segmentstateMap[SEGMENTSTATE_ON] : segmentstateMap[SEGMENTSTATE_OFF]);
 }
 
 void SevenSeg::showDecimalPoint(bool enable) const
 {
-	Device::digitalWritePin(decimalPointPin, enable ? segmentstateMap[SEGMENTSTATE_ON] : segmentstateMap[SEGMENTSTATE_OFF]);
+    Device::digitalWritePin(decimalPointPin, enable ? segmentstateMap[SEGMENTSTATE_ON] : segmentstateMap[SEGMENTSTATE_OFF]);
 }
 
 void SevenSeg::clear(void)
 {
-	showSymbol(SYMBOL_NOTHING);
-	showDecimalPoint(false);
+    showSymbol(SYMBOL_NOTHING);
+    showDecimalPoint(false);
 }
 
 bool SevenSeg::isNumberValid(uint8_t number) const
 {
-	return number <= SYMBOL_9;
+    return number <= SYMBOL_9;
 }
 
 SevenSeg::symbol_t SevenSeg::symbol(void) const
 {
-	return _symbol;
+    return _symbol;
 }
 
 char SevenSeg::number(void) const
 {
-	return isNumberValid(_symbol) ? _symbol : -1;
+    return isNumberValid(_symbol) ? _symbol : -1;
 }
 
 SevenSeg & SevenSeg::operator++(int)
 {
-	if (isNumberValid(_symbol))
-		showNumber(number() + 1);
-	return *this;
+    if (isNumberValid(_symbol))
+        showNumber(number() + 1);
+    return *this;
 }
 
 SevenSeg & SevenSeg::operator--(int)
 {
-	if (isNumberValid(_symbol))
-		showNumber(number() - 1);
-	return *this;
+    if (isNumberValid(_symbol))
+        showNumber(number() - 1);
+    return *this;
 }
