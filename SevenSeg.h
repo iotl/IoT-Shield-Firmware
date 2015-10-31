@@ -43,6 +43,7 @@ class SevenSeg
             SYMBOL_h,
             SYMBOL_I,
             SYMBOL_L,
+            SYMBOL_l,
             SYMBOL_O,
             SYMBOL_o,
             SYMBOL_P,
@@ -102,6 +103,12 @@ class SevenSeg
          * @param symbol The symbol to show.
          */
         void showSymbol(symbol_t symbol);
+
+        /**
+         * @brief Shows a ASCII char. Depends on whether the symbol for the char is supported by showSymbol().
+         * @param c The char to show.
+         */
+        void showChar(char c);
 
         /**
          * @brief Shows/hides a segment (show enum above) on the display (more low level access as showNumber() and showSymbol()).

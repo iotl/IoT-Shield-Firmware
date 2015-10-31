@@ -119,8 +119,8 @@ class ParkingShield
             bool sampleButton();
             unsigned int repeatInterval;
         private:
-            unsigned long repeatTime;
             Device::pin_t pinNumber;
+            unsigned long repeatTime;
         };
 
         // Variables

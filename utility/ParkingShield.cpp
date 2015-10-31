@@ -95,7 +95,7 @@ void setAllLeds(bool enable)
         ParkingShield::setLed(static_cast<ParkingShield::led_t>(led), enable);
 }
 
-ParkingShield::Button::Button(Device::pin_t button_pin) : pinNumber(button_pin), repeatInterval(0)
+ParkingShield::Button::Button(Device::pin_t button_pin) : repeatInterval(0), pinNumber(button_pin)
 {
     setPinMode(button_pin, Device::PINMODE_INPUT);
 }

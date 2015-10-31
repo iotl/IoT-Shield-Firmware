@@ -11,7 +11,10 @@ void setup()
 void loop(void)
 {
   if (shield.buttonS1Pressed())
-      counter = ++counter % SevenSeg::NUMBER_SYMBOLS;
+  {
+    ++counter;
+    counter %= SevenSeg::NUMBER_SYMBOLS;
+  }
 
   shield.sevenSeg.showSymbol(static_cast<SevenSeg::symbol_t>(counter));
 }

@@ -31,6 +31,7 @@ static bool const symbolMap[SevenSeg::NUMBER_SYMBOLS][SevenSeg::NUMBER_SEGMENTS]
     { false, false, true, false, true, true, true },	// h
     { false, false, false, false, true, true, false },	// I
     { false, false, false, true, true, true, false },	// L
+    { false, false, false, false, true, true, false },  // l
     { true, true, true, true, true, true, false },		// O
     { false, false, true, true, true, false, true },	// o
     { true, true, false, false, true, true, true },		// P
@@ -108,6 +109,78 @@ void SevenSeg::showSymbol(symbol_t symbol)
     _symbol = symbol;
     for(int i = 0; i < NUMBER_SEGMENTS; i++)
         showSegment(static_cast<segment_t>(i), symbolMap[symbol][i]);
+}
+
+void SevenSeg::showChar(char c)
+{
+  symbol_t symbol;
+
+  if (c == '0')
+    symbol = SYMBOL_0;
+  else if (c == '1')
+    symbol = SYMBOL_1;
+  else if (c == '2')
+    symbol = SYMBOL_2;
+  else if (c == '3')
+    symbol = SYMBOL_3;
+  else if (c == '4')
+    symbol = SYMBOL_4;
+  else if (c == '5')
+    symbol = SYMBOL_5;
+  else if (c == '6')
+    symbol = SYMBOL_6;
+  else if (c == '7')
+    symbol = SYMBOL_7;
+  else if (c == '8')
+    symbol = SYMBOL_8;
+  else if (c == '9')
+    symbol = SYMBOL_9;
+  else if (c == 'A')
+    symbol = SYMBOL_A;
+  else if (c == 'b')
+    symbol = SYMBOL_b;
+  else if (c == 'C')
+    symbol = SYMBOL_C;
+  else if (c == 'c')
+    symbol = SYMBOL_c;
+  else if (c == 'd')
+    symbol = SYMBOL_d;
+  else if (c == 'E')
+    symbol = SYMBOL_E;
+  else if (c == 'F')
+    symbol = SYMBOL_F;
+  else if (c == 'H')
+    symbol = SYMBOL_H;
+  else if (c == 'h')
+    symbol = SYMBOL_h;
+  else if (c == 'I')
+    symbol = SYMBOL_I;
+  else if (c == 'L')
+    symbol = SYMBOL_L;
+  else if (c == 'l')
+    symbol = SYMBOL_l;
+  else if (c == 'O')
+    symbol = SYMBOL_O;
+  else if (c == 'o')
+    symbol = SYMBOL_o;
+  else if (c == 'P')
+    symbol = SYMBOL_P;
+  else if (c == 'S')
+    symbol = SYMBOL_S;
+  else if (c == 'U')
+    symbol = SYMBOL_U;
+  else if (c == 'u')
+    symbol = SYMBOL_u;
+  else if (c == 'Y')
+    symbol = SYMBOL_Y;
+  else if (c == '-')
+    symbol = SYMBOL_MINUS;
+  else if (c == ' ')
+    symbol = SYMBOL_NOTHING;
+  else
+    symbol = SYMBOL_MINUS;
+  
+  showSymbol(symbol);
 }
 
 void SevenSeg::showSegment(segment_t segment, bool enable) const
