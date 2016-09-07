@@ -4,11 +4,12 @@
 #include <HttpRequest.h>
 #include <ParkingShield.h>
 
-// CHANGE THE TALKBACK'S API KEY HERE:
-static const char api_key[] = "V4OEUG5T1A0TFZLC";
+// CHANGE THE TALKBACK ID AND API KEY HERE:
+static const unsigned int talkbackId = 9999;
+static const char api_key[] = "ABCDEFGHIJKLMNOP";
 
-// CHANGE THE TALKBACK ID HERE:
-static const unsigned int talkbackId = 3391;
+#define log(result,message) \
+  (Serial.print(message), Serial.print(F(": ")), Serial.println(result))
 
 ParkingShield shield;
 SoftwareSerial espSerial(2, 3);
@@ -18,16 +19,13 @@ void setup()
 {
   Serial.begin(9600);
 
-  // Setup module
-  esp.configureBaud();
-  esp.setBaud(9600);
-  
-  // Setting the module to wireless client(1) or access point mode(2) 
-  // is not yet in API. We have to set it by an AT command.
-  espSerial.print(F("AT+CWMODE=1\r\n"));
+  // Configure the WLAN module
+  log(esp.configureBaud(), F("Trying to find baud rate for WLAN module"));
+  log(esp.setBaud(9600), F("Switch to 9600 baud"));
 
-  esp.joinAccessPoint("ti_iot", "ti_iot42!");
-  esp.setMultipleConnections(true);
+  log(esp.joinAccessPoint("eduinfo", ""), F("Connecting to the AP"));
+
+  log(esp.setMultipleConnections(true), F("Enable multi-connection support"));
 }
 
 void executeCommand(const String &str)
@@ -100,28 +98,25 @@ void loop()
   // Build the request
   HttpRequest req(path);
   req.addParameter(F("api_key"), api_key);
-
-  // Print the request
   String reqStr = req.get();
-  Serial.print(F("Send request: "));
-  Serial.println(reqStr);
+
+  // Connect to thingspeak
+  log(esp.connectSecure(1, F("api.thingspeak.com")), F("Connecting to thingspeak through TLS"));
 
   // Send the request
-  esp.connect(1, F("api.thingspeak.com"), 80);
+  log(reqStr, F("Send request"));
   esp.send(1, reqStr);
 
   // Parse answer
   IPDParser parser(espSerial);
-  if (parser.parse()) 
-  {
+  if (parser.parse()) {
     String payload = parser.getPayload();
-    Serial.print(F("Received talkback: "));
-    Serial.println(payload);
+    log(payload, F("Received talkback"));
     executeCommand(payload);
+  } else {
+    Serial.println(F("No or invalid answer."));
   }
-  else
-    Serial.println(F("No or invalid ansewer."));
 
-  // Thingspeak requires 15 s delay between requests
-  delay (16000);
+  // Poll every 8 seconds for new commands
+  delay(8000);
 }
