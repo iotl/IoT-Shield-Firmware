@@ -1,13 +1,6 @@
 #include "ClassTrafficLights.h"
 #include <ParkingShield.h>
 
-/*
- * @brief Dies ist eine Neuimplementierung der erweiteren Ampelschaltung für das Arduino UNO - Parking Schiled der Uni-Leipzig
- * Sie entstand im Rahmen eines Workshops
- * @author Michael Krause (1ux)
- *
-*/
-
 ParkingShield shield;
 ClassTrafficLights TrafficLight(shield);
 
