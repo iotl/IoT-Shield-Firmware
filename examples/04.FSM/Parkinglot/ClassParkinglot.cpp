@@ -1,65 +1,67 @@
 #include <ParkingShield.h>
 #include "ClassParkinglot.h"
 
-
-
-void ClassParkinglot::Prozess(Alphabet Ereignis)
+void ClassParkinglot::setLeds(bool red, bool yellow, bool green)
 {
-  this->Zustand = Ueberfuehrungsfunktion[Zustand][Ereignis];
-  _shield.setRepeatInterval(250);
-  
-  switch(Zustand)
-  {
-       case S0: 
-           _shield.setLed(ParkingShield::RED_LED,false);
-           _shield.setLed(ParkingShield::YELLOW_LED,false);
-           _shield.setLed(ParkingShield::GREEN_LED,false);
-           credit=0;
-           _shield.sevenSeg.clear();
-           break;
-       case S1: 
-           _shield.setLed(ParkingShield::RED_LED,true);
-           _shield.setLed(ParkingShield::YELLOW_LED,false);
-           _shield.setLed(ParkingShield::GREEN_LED,false);
-           credit=0;
-           _shield.sevenSeg.showNumber(credit);
-           break;
-       case S2: 
-           _shield.setLed(ParkingShield::RED_LED,true);
-           _shield.setLed(ParkingShield::YELLOW_LED,false);
-           _shield.setLed(ParkingShield::GREEN_LED,false);
-           if(credit!=1) credit=1;
-           _shield.sevenSeg.showNumber(credit);
-           break;
-       case S3: 
-           _shield.setLed(ParkingShield::RED_LED,true);
-           _shield.setLed(ParkingShield::YELLOW_LED,false);
-           _shield.setLed(ParkingShield::GREEN_LED,false);
-           if(_shield.buttonS1Pressed() && credit <9) credit++;
-           _shield.sevenSeg.showNumber(credit);
-           break;
-       case S4: 
-           _shield.setLed(ParkingShield::RED_LED,false);
-           _shield.setLed(ParkingShield::YELLOW_LED,false);
-           _shield.setLed(ParkingShield::GREEN_LED,true);
-           if(_shield.buttonS2Pressed()) parkingCountdown.setCredit(credit);
-           _scheduler.scheduleTasks();
-           credit=parkingCountdown.getNewCredit();
-           _shield.sevenSeg.showNumber(credit);
-           if(credit==1) Zustand=S5;
-           break;
-       case S5:
-           _shield.setLed(ParkingShield::RED_LED,false);
-           _shield.setLed(ParkingShield::YELLOW_LED,true);
-           _shield.setLed(ParkingShield::GREEN_LED,false);
-           _scheduler.scheduleTasks();
-           credit=parkingCountdown.getNewCredit();
-           _shield.sevenSeg.showNumber(credit);
-           if(credit==0) Zustand=S1;
-           
-       
-  }
+  shield.setLed(ParkingShield::RED_LED, red);
+  shield.setLed(ParkingShield::YELLOW_LED, yellow);
+  shield.setLed(ParkingShield::GREEN_LED, green);
 }
 
+void ClassParkinglot::update(void)
+{
+  process(tick);
+}
 
+void ClassParkinglot::process(Events event)
+{
+  // input
+  if(event == pay && credit <9) {
+    credit++;
+  }
+  if(event == free) {
+    credit = 0;
+  }
+  if(event == tick && (state == S4 || state == S5) && credit >= 1) {
+    credit--;
+  }
+
+  // transition
+  if(state == S4 && credit == 1) {
+    state = S5;
+  } else if(state == S5 && credit == 0) {
+    state = S1;
+  } else {
+    state = transitions[state][event];
+  }
+
+  // output
+  switch(state)
+  {
+    case S0:
+      setLeds(false, false, false);
+      shield.sevenSeg.clear();
+      break;
+    case S1:
+      setLeds(true, false, false);
+      shield.sevenSeg.showNumber(credit);
+      break;
+    case S2:
+      setLeds(true, false, false);
+      shield.sevenSeg.showNumber(credit);
+      break;
+    case S3:
+      setLeds(true, false, false);
+      shield.sevenSeg.showNumber(credit);
+      break;
+    case S4:
+      setLeds(false, false, true);
+      shield.sevenSeg.showNumber(credit);
+      break;
+    case S5:
+      setLeds(false, true, false);
+      shield.sevenSeg.showNumber(credit);
+      break;
+  }
+}
 

@@ -2,54 +2,33 @@
 #define ClassParkinglot_H
 
 #include <Task.h>
-#include <Scheduler.h>
-#include "Countdown.h"
 
-class ClassParkinglot
+class ClassParkinglot : public Task
 {
-  //----------------------------------
   public:
-  
-    enum Alphabet {ready, free, pay, start, tick, alert};//EingabeAlphabet
-    typedef Alphabet Alphabet; 
-    int credit;
+    enum Events {ready, free, pay, start, tick}; //Eingabealphabet
+    enum States {S0,S1,S2,S3,S4,S5};
 
-    //ClassParkinglot(ParkingShield &shield, Scheduler &scheduler )
-    ClassParkinglot(ParkingShield &shield)
-    {
-        this->Zustand = S0;                              //Startzustand
-        this->_shield = shield;
-        this->credit = 0;
-        
-        _scheduler.addTask(&parkingCountdown, 1000, true);
-    }
+    ClassParkinglot(ParkingShield &shield) : shield(shield) {}
 
-    void Prozess(Alphabet Ereignis);
-    
-  //----------------------------------
+    void update(void);
+    void process(Events event);
+
   private:
+    States state = S0;
+    ParkingShield &shield;
+    unsigned int credit;
 
-    enum Zustandsmenge {S0,S1,S2,S3,S4,S5};
-    typedef Zustandsmenge Zustandsmenge;                //endliche Zustandsmenge
+    States transitions[6][5] =
+//    ready, free, pay, start, tick
+      {{S1,  S0,   S0,  S0,    S0}, //S0
+      { S1,  S0,   S2,  S1,    S1}, //S1
+      { S2,  S0,   S3,  S5,    S2}, //S2
+      { S3,  S0,   S3,  S4,    S3}, //S3
+      { S4,  S0,   S3,  S4,    S4}, //S4
+      { S5,  S0,   S2,  S5,    S1}};//S5
 
-    Zustandsmenge Zustand;
-    ParkingShield _shield;
-    Scheduler _scheduler;
-    Countdown parkingCountdown;
-
-    Zustandsmenge Ueberfuehrungsfunktion[6][6] =        //Zustandsüberführungsfunktion
-//  ready, free, pay, start, tick, alert  
-    {{S1,  S0,   S0,  S0,    S0,   S0}, //S0
-    { S1,  S0,   S2,  S1,    S1,   S1}, //S1
-    { S2,  S0,   S3,  S5,    S2,   S2}, //S2
-    { S3,  S0,   S3,  S4,    S3,   S3}, //S3
-    { S4,  S0,   S3,  S4,    S4,   S5}, //S4
-    { S5,  S0,   S2,  S5,    S1,   S5}};//S5
-
+    void setLeds(bool red, bool yellow, bool green);
 };
-
-//----------------------------------
-
-
 
 #endif
