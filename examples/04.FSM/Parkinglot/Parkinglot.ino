@@ -16,7 +16,7 @@ Parkinglot parkinglot(shield);
 void setup(void)
 {
   shield.setRepeatInterval(250);
-  scheduler.addTask(&parkinglot, 1000, true);
+  scheduler.addTask(&parkinglot, 4000, true);
 }
 
 void loop(void)
