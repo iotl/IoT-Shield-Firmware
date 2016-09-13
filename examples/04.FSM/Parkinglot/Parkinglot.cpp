@@ -1,19 +1,19 @@
 #include <ParkingShield.h>
-#include "ClassParkinglot.h"
+#include "Parkinglot.h"
 
-void ClassParkinglot::setLeds(bool red, bool yellow, bool green)
+void Parkinglot::setLeds(bool red, bool yellow, bool green)
 {
   shield.setLed(ParkingShield::RED_LED, red);
   shield.setLed(ParkingShield::YELLOW_LED, yellow);
   shield.setLed(ParkingShield::GREEN_LED, green);
 }
 
-void ClassParkinglot::update(void)
+void Parkinglot::update(void)
 {
   process(tick);
 }
 
-void ClassParkinglot::process(Events event)
+void Parkinglot::process(Events event)
 {
   // input
   if(event == pay && credit <9) {

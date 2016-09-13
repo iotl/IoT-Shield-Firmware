@@ -1,10 +1,11 @@
 #include <ParkingShield.h>
 #include <Scheduler.h>
-#include "ClassParkinglot.h"
+
+#include "Parkinglot.h"
 
 Scheduler scheduler;
 ParkingShield shield;
-ClassParkinglot parkinglot(shield);
+Parkinglot parkinglot(shield);
 
 /**
  * @brief Dies ist eine Neuimplementierung der Parkbucht für das Arduino UNO - Parking Schiled der Uni-Leipzig
@@ -23,19 +24,19 @@ void loop(void)
   scheduler.scheduleTasks();
   if(shield.getBrightness() < 700)
   {
-    parkinglot.process(ClassParkinglot::ready);
+    parkinglot.process(Parkinglot::ready);
     if(shield.buttonS1Pressed())
     {
-      parkinglot.process(ClassParkinglot::pay);
+      parkinglot.process(Parkinglot::pay);
     }
     else if(shield.buttonS2Pressed())
     {
-      parkinglot.process(ClassParkinglot::start);
+      parkinglot.process(Parkinglot::start);
     }
   }
   else
   {
-    parkinglot.process(ClassParkinglot::free);
+    parkinglot.process(Parkinglot::free);
   }
 }
 

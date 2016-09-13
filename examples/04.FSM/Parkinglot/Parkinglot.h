@@ -1,15 +1,17 @@
-#ifndef ClassParkinglot_H
-#define ClassParkinglot_H
+#ifndef PARKINGLOT_H
+#define PARKINGLOT_H
 
 #include <Task.h>
 
-class ClassParkinglot : public Task
+class ParkingShield;
+
+class Parkinglot : public Task
 {
   public:
     enum Events {ready, free, pay, start, tick}; //Eingabealphabet
     enum States {S0,S1,S2,S3,S4,S5};
 
-    ClassParkinglot(ParkingShield &shield) : shield(shield) {}
+    Parkinglot(ParkingShield &shield) : shield(shield) {}
 
     void update(void);
     void process(Events event);
