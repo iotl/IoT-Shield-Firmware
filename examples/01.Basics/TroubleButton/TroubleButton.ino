@@ -3,12 +3,12 @@
 /*  #define BUTTON_S1 A0
     #define LED_1 A4
 */
-static const uint8_t PinDefSet        =A0;
-static const uint8_t PinDefReset      =A1;
-static const uint8_t PinDefLedRed     =A4;
-static const uint8_t PinDefLedYellow  =A5;
+const uint8_t PinDefSet        =A0;
+const uint8_t PinDefReset      =A1;
+const uint8_t PinDefLedRed     =A4;
+const uint8_t PinDefLedYellow  =A5;
 
-int TureCounter=0;
+int TrueCounter=0;
 bool pressed = false;
 
 //siehe pins_arduino.h
@@ -36,10 +36,10 @@ void loop()
 
   if(digitalRead(PinDefSet) && pressed==false)
   {
-    TureCounter++;
+    TrueCounter++;
     pressed=true;
     digitalWrite(PinDefLedRed, 0);
-    Serial.println(TureCounter);
+    Serial.println(TrueCounter);
   }
   else 
   if(!digitalRead(PinDefSet))
@@ -51,10 +51,10 @@ void loop()
   //Reset Counter, Yellow LED
   if(digitalRead(PinDefReset))
   {
-    if(TureCounter!=0)
+    if(TrueCounter!=0)
     {
-      TureCounter=0;
-      Serial.println(TureCounter); 
+      TrueCounter=0;
+      Serial.println(TrueCounter); 
     }
     digitalWrite(PinDefLedYellow,0);
   }
