@@ -1,3 +1,4 @@
+#include <SoftwareSerial.h>
 #include <ParkingShield.h>
 #include <Scheduler.h>
 
@@ -5,19 +6,21 @@
 #include "Thingspeak.h"
 
 Scheduler scheduler;
+
 ParkingShield shield;
 Parkinglot parkinglot(shield);
 
 SoftwareSerial espSerial(2, 3);
 Esp8266<SoftwareSerial> esp(espSerial);
 
-Talkback talkback(espSerial, esp, parkinglot, 10251, "I9FW4PFTGV8X55FG");
+Talkback<SoftwareSerial> talkback(esp, 9999, "AAAAAAAAAAAAAAAA", [](String command){
+  if(command == "pay") {
+    parkinglot.process(Parkinglot::pay);
+  } else if(command == "start") {
+    parkinglot.process(Parkinglot::start);
+  }
+});
 
-/**
- * @brief Dies ist eine Neuimplementierung der Parkbucht für das Arduino UNO - Parking Schiled der Uni-Leipzig
- * Der überarbeitete Zustandsautomat liegt als grafische Übersicht bei. Dieser bildet die Spezifikation.
- * @author Michael Krause (1ux)
- **/
 
 void setup(void)
 {
