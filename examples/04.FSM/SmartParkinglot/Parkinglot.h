@@ -28,7 +28,7 @@ class Parkinglot : public Task
       { S2,  S0,   S3,  S5,    S2}, //S2
       { S3,  S0,   S3,  S4,    S3}, //S3
       { S4,  S0,   S3,  S4,    S4}, //S4
-      { S5,  S0,   S2,  S5,    S1}};//S5
+      { S5,  S0,   S3,  S5,    S1}};//S5
 
     void setLeds(bool red, bool yellow, bool green);
 };

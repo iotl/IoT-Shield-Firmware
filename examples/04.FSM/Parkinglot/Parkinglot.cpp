@@ -27,10 +27,9 @@ void Parkinglot::process(Events event)
   }
 
   // transition
-  if(state == S4 && credit == 1) {
+  if(event == tick && state == S4 && credit == 1) {
+    // special tick if only one credit left: enter alert state (S5)
     state = S5;
-  } else if(state == S5 && credit == 0) {
-    state = S1;
   } else {
     state = transitions[state][event];
   }
