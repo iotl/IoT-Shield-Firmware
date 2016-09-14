@@ -35,7 +35,11 @@ void setup(void)
 
 void loop(void)
 {
+  // make background tasks visible (non-responsive ui)
+  shield.sevenSeg.showDecimalPoint(true);
   scheduler.scheduleTasks();
+  shield.sevenSeg.showDecimalPoint(false);
+
   if(shield.getBrightness() < 700)
   {
     parkinglot.process(Parkinglot::ready);
