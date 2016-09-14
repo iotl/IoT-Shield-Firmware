@@ -16,6 +16,9 @@ class Parkinglot : public Task
     void update(void);
     void process(Events event);
 
+    States getState();
+    unsigned int getCredit();
+
   private:
     States state = S0;
     ParkingShield &shield;

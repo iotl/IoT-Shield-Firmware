@@ -64,3 +64,12 @@ void Parkinglot::process(Events event)
   }
 }
 
+Parkinglot::States Parkinglot::getState()
+{
+  return state;
+}
+
+unsigned int Parkinglot::getCredit()
+{
+  return credit;
+}
