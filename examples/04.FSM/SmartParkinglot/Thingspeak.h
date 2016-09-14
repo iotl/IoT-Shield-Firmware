@@ -20,6 +20,64 @@ void setupWlan(Esp8266<T>& esp, const char* ssid, const char* psk) {
 }
 
 template<class T>
+class Channel : public Task {
+  public:
+    using RequestCallback = void (*)(HttpRequest& request);
+
+    Channel(Esp8266<T>& esp, Scheduler& scheduler, const char* apiKey, RequestCallback callback)
+      : esp(esp), scheduler(scheduler), apiKey(apiKey), callback(callback) {
+        scheduler.addTask(this, 15000);
+      }
+
+    void update() {
+      if(uploadScheduled) {
+        uploadScheduled = false;
+        channelBlocked = true;
+
+        HttpRequest req(F("/update"));
+        req.addParameter(F("api_key"), apiKey);
+
+        // Let caller specify field values and additional http headers
+        callback(req);
+
+        String reqStr = req.get();
+
+        // Connect to thingspeak
+        log(esp.connectSecure(1, F("api.thingspeak.com")), F("Connecting to thingspeak through TLS"));
+
+        // Send the request
+        log(reqStr, F("Send request"));
+        esp.send(1, reqStr);
+      } else {
+        channelBlocked = false;
+      }
+
+      scheduler.removeTask(this);
+      scheduler.addTask(this, 15000);
+    }
+
+    void scheduleUpload() {
+      uploadScheduled = true;
+
+      if(!channelBlocked) {
+        // schedule task for immediate execution
+        scheduler.removeTask(this);
+        scheduler.addTask(this, 0);
+      }
+    }
+
+  private:
+    Esp8266<T>& esp;
+    Scheduler& scheduler;
+    RequestCallback callback;
+    const char* apiKey;
+
+    bool uploadScheduled = false;
+    // When we update the channel, it is blocked for 15 seconds (API limit)
+    bool channelBlocked = false;
+};
+
+template<class T>
 class Talkback : public Task {
   public:
     using CommandCallback = void (*)(String);

@@ -21,6 +21,12 @@ Talkback<SoftwareSerial> talkback(esp, 9999, "AAAAAAAAAAAAAAAA", [](String comma
   }
 });
 
+Channel<SoftwareSerial> channel(esp, scheduler, "JE6VRA8PR16IVC7D", [](HttpRequest& request){
+  request.addParameter("field1", String(shield.getTemperature()));
+  request.addParameter("field2", String(shield.getBrightness()));
+  request.addParameter("field3", String(parkinglot.getState()));
+  request.addParameter("field4", String(parkinglot.getCredit()));
+});
 
 void setup(void)
 {
@@ -50,11 +56,12 @@ void loop(void)
     else if(shield.buttonS2Pressed())
     {
       parkinglot.process(Parkinglot::start);
+      channel.scheduleUpload();
     }
   }
   else
   {
     parkinglot.process(Parkinglot::free);
+    channel.scheduleUpload();
   }
 }
-
