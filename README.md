@@ -52,3 +52,7 @@ void loop() {
     shield.setLed(ParkingShield::GREEN_LED, shield.buttonS1Pressed());
 }
 ```
+
+The `examples` folder contains more exmaples and also some small projects (like the [SmartParkinglot]).
+
+[SmartParkinglot]: examples/04.FSM/SmartParkinglot/
