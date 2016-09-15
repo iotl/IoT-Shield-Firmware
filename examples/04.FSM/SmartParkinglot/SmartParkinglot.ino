@@ -13,19 +13,20 @@ Parkinglot parkinglot(shield);
 SoftwareSerial espSerial(2, 3);
 Esp8266<SoftwareSerial> esp(espSerial);
 
+Channel<SoftwareSerial> channel(esp, scheduler, "AAAAAAAAAAAAAAAA", [](HttpRequest& request){
+  request.addParameter("field1", String(shield.getTemperature()));
+  request.addParameter("field2", String(shield.getBrightness()));
+  request.addParameter("field3", String(parkinglot.getState()));
+  request.addParameter("field4", String(parkinglot.getCredit()));
+});
+
 Talkback<SoftwareSerial> talkback(esp, 9999, "AAAAAAAAAAAAAAAA", [](String command){
   if(command == "pay") {
     parkinglot.process(Parkinglot::pay);
   } else if(command == "start") {
     parkinglot.process(Parkinglot::start);
+    channel.scheduleUpload();
   }
-});
-
-Channel<SoftwareSerial> channel(esp, scheduler, "JE6VRA8PR16IVC7D", [](HttpRequest& request){
-  request.addParameter("field1", String(shield.getTemperature()));
-  request.addParameter("field2", String(shield.getBrightness()));
-  request.addParameter("field3", String(parkinglot.getState()));
-  request.addParameter("field4", String(parkinglot.getCredit()));
 });
 
 void setup(void)
