@@ -60,9 +60,10 @@ class Channel : public Task {
       uploadScheduled = true;
 
       if(!channelBlocked) {
+        channelBlocked = true;
         // schedule task for immediate execution
         scheduler.removeTask(this);
-        scheduler.addTask(this, 0);
+        scheduler.addTask(this, 1000);
       }
     }
 
