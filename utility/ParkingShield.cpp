@@ -117,7 +117,11 @@ bool ParkingShield::Button::sampleButton()
 // ---------------------------------------------------------------------------------------------------- //
 // Public
 // ---------------------------------------------------------------------------------------------------- //
-ParkingShield::ParkingShield(void) : sevenSeg(sevensegment_pins),
+ParkingShield::ParkingShield(void) :
+            ParkingShield(SevenSeg::CONNECTOR_COMMONANODE) {}
+
+ParkingShield::ParkingShield(SevenSeg::connector_t connector) :
+            sevenSeg(sevensegment_pins, true, connector),
             buttonS1(Device::ANALOG_PIN_0), buttonS2(Device::ANALOG_PIN_1)
 {
     setupOutput();

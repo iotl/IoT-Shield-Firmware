@@ -28,6 +28,11 @@ class ParkingShield
         ParkingShield(void);
 
         /**
+         * @brief Constructor that allowes specifying the segment display common pin reference
+         */
+        ParkingShield(SevenSeg::connector_t connector);
+
+        /**
          * @brief Enables or disables an LED.
          * @param led The led to set on or off.
          * @param enable "True" enables and "false" disables the given led.
